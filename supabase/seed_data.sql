@@ -1,0 +1,12 @@
+INSERT INTO public.jobs (title, description, company, location)
+VALUES
+  ('PPF Installer', 'Seeking experienced PPF installer for high-end vehicles. Must have a keen eye for detail and precision. Opportunity to work with exotic cars and a dedicated team.', 'Elite Auto Spa', 'San Francisco, CA'),
+  ('Vinyl Wrap Specialist', 'Join our dynamic team as a Vinyl Wrap Specialist. We focus on custom vehicle wraps, color changes, and commercial fleet branding. Creativity and experience with various vinyl types are a plus.', 'Wrap Dynamics', 'Atlanta, GA'),
+  ('Window Tint Technician', 'Experienced Window Tint Technician needed for automotive and residential tinting. Knowledge of different film types and local regulations is essential. Strong customer service skills required.', 'Clear View Tints', 'Oakland, CA'),
+  ('Ceramic Coating Technician', 'We are looking for a skilled Ceramic Coating Technician to apply advanced protective coatings to vehicles. Attention to detail and a passion for automotive aesthetics are a must.', 'Shine Pro Detailing', 'Roswell, GA'),
+  ('Automotive Detailer', 'Professional Automotive Detailer wanted for a busy shop. Responsibilities include interior and exterior detailing, paint correction, and customer vehicle preparation.', 'Prestige Auto Works', 'Berkeley, CA'),
+  ('Lead PPF Installer', 'Lead PPF Installer position available. Manage a team, train junior installers, and ensure the highest quality PPF applications on luxury vehicles.', 'Luxury Shield Films', 'San Jose, CA'),
+  ('Commercial Wrap Installer', 'Seeking a Commercial Wrap Installer for large format graphic installations on vehicles and storefronts. Experience with ladder work and precision cutting required.', 'Sign & Wrap Solutions', 'Alpharetta, GA'),
+  ('Mobile Window Tint Specialist', 'Independent Mobile Window Tint Specialist needed. Provide on-site window tinting services for clients in the greater Bay Area. Flexible schedule and commission-based.', 'Bay Area Tint Pros', 'Fremont, CA'),
+  ('Paint Correction & Detailer', 'Join our team as a Paint Correction & Detailer. Specializing in advanced paint correction techniques, ceramic coatings, and premium detailing services. Experience with various paint types and tools is a must.', 'Precision Auto Detail', 'Marietta, GA'),
+  ('Vehicle Accessory Installer', 'Install various vehicle accessories including protective films, lighting, and custom upgrades. Must be familiar with different vehicle makes and models.', 'Custom Rides SF', 'San Francisco, CA');

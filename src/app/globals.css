@@ -1,0 +1,34 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #0F0F1A; /* Primary background color */
+  color: #FFFFFF; /* Primary text color */
+}
+
+/* Custom scrollbar for dark theme (optional, but good for UX) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1A1A2E; /* Surface color */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A2A45; /* Border color */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF6B2C; /* Orange primary on hover */
+}
+
+/* Redeploy trigger Mon Feb 23 20:59:37 PST 2026 */
