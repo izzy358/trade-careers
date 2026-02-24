@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 
+function cleanOptionalText(value: unknown) {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
 export async function GET(request: NextRequest) {
   try {
     const supabase = await createClient();
@@ -62,6 +71,12 @@ export async function POST(request: NextRequest) {
     const name = (body.name || '').trim();
     const location = (body.location || '').trim();
     const bio = (body.bio || '').trim();
+    const instagram = cleanOptionalText(body.instagram);
+    const tiktok = cleanOptionalText(body.tiktok);
+    const website = cleanOptionalText(body.website);
+    const youtube = cleanOptionalText(body.youtube);
+    const phone = cleanOptionalText(body.phone);
+    const email = cleanOptionalText(body.email);
 
     const specialties = Array.isArray(body.specialties)
       ? body.specialties.map((value: string) => String(value).trim()).filter(Boolean)
@@ -81,6 +96,12 @@ export async function POST(request: NextRequest) {
         location,
         specialties,
         bio,
+        instagram,
+        tiktok,
+        website,
+        youtube,
+        phone,
+        email,
       })
       .select('*')
       .single();

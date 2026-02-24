@@ -24,3 +24,26 @@ VALUES
   ('Sofia Bennett', 'sofia.bennett@example.com', 'Nashville, TN', ARRAY['vinyl-wrap','window-tint','ppf'], 'Versatile installer across wraps, tint, and PPF with strong customer handoff process.', ARRAY['https://instagram.com/sofiabuilds'], 11, true, 'sofia-bennett-nashville-tn', 'seedtoken-sofia-bennett'),
   ('Trevor King', 'trevor.king@example.com', 'Charlotte, NC', ARRAY['vinyl-wrap','paint-correction'], 'Color-change wrap specialist known for complex curves and post-wrap refinishing.', ARRAY['https://www.trevorwraps.example.com'], 12, true, 'trevor-king-charlotte-nc', 'seedtoken-trevor-king')
 ON CONFLICT (slug) DO NOTHING;
+
+UPDATE public.installers
+SET
+  instagram = '@marcuswraps',
+  tiktok = '@marcuswraps',
+  website = 'https://marcuswrapgarage.example.com',
+  youtube = 'https://youtube.com/@marcuswraps',
+  phone = '(214) 555-0142'
+WHERE slug = 'marcus-hill-dallas-tx';
+
+UPDATE public.installers
+SET
+  instagram = '@ortiztintlab',
+  website = 'https://ortiztintlab.example.com',
+  phone = '(512) 555-0178'
+WHERE slug = 'elena-ortiz-austin-tx';
+
+UPDATE public.installers
+SET
+  tiktok = '@detailcody',
+  website = 'https://detailcody.example.com',
+  youtube = 'https://youtube.com/@detailcody'
+WHERE slug = 'cody-ramirez-denver-co';

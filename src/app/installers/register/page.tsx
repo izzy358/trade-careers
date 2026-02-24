@@ -13,6 +13,12 @@ const initialData = {
   name: '',
   location: '',
   bio: '',
+  instagram: '',
+  tiktok: '',
+  website: '',
+  youtube: '',
+  phone: '',
+  email: '',
   specialties: [] as string[],
 };
 
@@ -51,6 +57,12 @@ export default function InstallerRegistrationPage() {
           location: formData.location,
           bio: formData.bio,
           specialties: formData.specialties,
+          instagram: formData.instagram,
+          tiktok: formData.tiktok,
+          website: formData.website,
+          youtube: formData.youtube,
+          phone: formData.phone,
+          email: formData.email,
         }),
       });
 
@@ -153,6 +165,67 @@ export default function InstallerRegistrationPage() {
             placeholder="Share your background, services, and what types of jobs you want."
             required
           />
+        </div>
+
+        <div className="rounded-xl border border-border bg-background/60 p-4">
+          <h2 className="mb-3 text-lg font-semibold text-white">Socials (Optional)</h2>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-sm text-text-secondary">Instagram</label>
+              <input
+                value={formData.instagram}
+                onChange={(event) => setFormData((prev) => ({ ...prev, instagram: event.target.value }))}
+                className="w-full rounded-lg border border-border bg-background p-3"
+                placeholder="@yourhandle or full URL"
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm text-text-secondary">TikTok</label>
+              <input
+                value={formData.tiktok}
+                onChange={(event) => setFormData((prev) => ({ ...prev, tiktok: event.target.value }))}
+                className="w-full rounded-lg border border-border bg-background p-3"
+                placeholder="@yourhandle or full URL"
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm text-text-secondary">Website</label>
+              <input
+                value={formData.website}
+                onChange={(event) => setFormData((prev) => ({ ...prev, website: event.target.value }))}
+                className="w-full rounded-lg border border-border bg-background p-3"
+                placeholder="https://yourshop.com"
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm text-text-secondary">YouTube</label>
+              <input
+                value={formData.youtube}
+                onChange={(event) => setFormData((prev) => ({ ...prev, youtube: event.target.value }))}
+                className="w-full rounded-lg border border-border bg-background p-3"
+                placeholder="https://youtube.com/@channel"
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm text-text-secondary">Phone</label>
+              <input
+                value={formData.phone}
+                onChange={(event) => setFormData((prev) => ({ ...prev, phone: event.target.value }))}
+                className="w-full rounded-lg border border-border bg-background p-3"
+                placeholder="(555) 555-5555"
+              />
+            </div>
+            <div>
+              <label className="mb-2 block text-sm text-text-secondary">Email</label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(event) => setFormData((prev) => ({ ...prev, email: event.target.value }))}
+                className="w-full rounded-lg border border-border bg-background p-3"
+                placeholder="you@example.com"
+              />
+            </div>
+          </div>
         </div>
 
         {submitError ? (

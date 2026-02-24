@@ -11,8 +11,53 @@ type InstallerListItem = {
   bio: string | null;
   years_experience?: number | null;
   is_available?: boolean | null;
+  instagram?: string | null;
+  tiktok?: string | null;
+  website?: string | null;
+  youtube?: string | null;
+  phone?: string | null;
+  email?: string | null;
   created_at: string;
 };
+
+function normalizeSocialValue(value?: string | null) {
+  const normalized = value?.trim();
+  return normalized ? normalized : null;
+}
+
+function toSocialHref(value: string, type: 'instagram' | 'tiktok' | 'website' | 'youtube' | 'phone' | 'email') {
+  const trimmed = value.trim();
+
+  if (type === 'phone') {
+    return `tel:${trimmed}`;
+  }
+  if (type === 'email') {
+    return `mailto:${trimmed}`;
+  }
+  if (type === 'website') {
+    return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  }
+  if (type === 'instagram') {
+    return /^https?:\/\//i.test(trimmed)
+      ? trimmed
+      : `https://instagram.com/${trimmed.replace(/^@/, '')}`;
+  }
+  if (type === 'tiktok') {
+    return /^https?:\/\//i.test(trimmed)
+      ? trimmed
+      : `https://tiktok.com/@${trimmed.replace(/^@/, '')}`;
+  }
+
+  return /^https?:\/\//i.test(trimmed) ? trimmed : `https://youtube.com/${trimmed}`;
+}
+
+function SocialIcon({ label }: { label: string }) {
+  return (
+    <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border border-primary/50 bg-primary/10 text-[10px] font-bold text-primary">
+      {label}
+    </span>
+  );
+}
 
 type InstallersPageProps = {
   searchParams: Promise<{
@@ -152,6 +197,30 @@ export default async function InstallersPage({ searchParams }: InstallersPagePro
               ) : null}
 
               <p className="text-text-secondary text-sm line-clamp-3">{installer.bio || 'No bio added yet.'}</p>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                {[
+                  { key: 'instagram', short: 'IG', value: normalizeSocialValue(installer.instagram) },
+                  { key: 'tiktok', short: 'TT', value: normalizeSocialValue(installer.tiktok) },
+                  { key: 'website', short: 'Web', value: normalizeSocialValue(installer.website) },
+                  { key: 'youtube', short: 'YT', value: normalizeSocialValue(installer.youtube) },
+                  { key: 'phone', short: 'P', value: normalizeSocialValue(installer.phone) },
+                  { key: 'email', short: 'E', value: normalizeSocialValue(installer.email) },
+                ].map((item) =>
+                  item.value ? (
+                    <a
+                      key={item.key}
+                      href={toSocialHref(item.value, item.key as 'instagram' | 'tiktok' | 'website' | 'youtube' | 'phone' | 'email')}
+                      target={item.key === 'phone' || item.key === 'email' ? undefined : '_blank'}
+                      rel={item.key === 'phone' || item.key === 'email' ? undefined : 'noreferrer'}
+                      aria-label={item.key}
+                      className="transition-opacity hover:opacity-80"
+                    >
+                      <SocialIcon label={item.short} />
+                    </a>
+                  ) : null,
+                )}
+              </div>
             </article>
           ))}
         </div>
