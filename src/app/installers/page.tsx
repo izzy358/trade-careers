@@ -5,13 +5,12 @@ import { TRADES, tradeColors, tradeLabel } from '@/utils/constants';
 
 type InstallerListItem = {
   id: string;
-  slug: string;
   name: string;
   location: string;
   specialties: string[];
   bio: string | null;
-  years_experience: number | null;
-  is_available: boolean | null;
+  years_experience?: number | null;
+  is_available?: boolean | null;
   created_at: string;
 };
 
@@ -26,7 +25,7 @@ type InstallersPageProps = {
 };
 
 export const metadata: Metadata = {
-  title: 'Installer Directory | WrapCareers',
+  title: 'Installer Directory',
   description: 'Browse installer profiles by location and specialty for wrap, tint, PPF, and detailing trades.',
 };
 
@@ -127,7 +126,7 @@ export default async function InstallersPage({ searchParams }: InstallersPagePro
             <article key={installer.id} className="bg-surface border border-border rounded-xl p-6">
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div>
-                  <Link href={`/installers/${installer.slug}`} className="text-xl font-semibold hover:text-primary transition-colors">
+                  <Link href={`/installers/${installer.id}`} className="text-xl font-semibold hover:text-primary transition-colors">
                     {installer.name}
                   </Link>
                   <p className="text-text-secondary text-sm">{installer.location}</p>

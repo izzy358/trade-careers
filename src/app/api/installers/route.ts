@@ -1,15 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
-import { randomUUID } from 'crypto';
-
-function makeSlug(name: string, location: string) {
-  const base = `${name}-${location}`
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-  return `${base}-${randomUUID().slice(0, 8)}`;
-}
 
 export async function GET(request: NextRequest) {
   try {
@@ -70,7 +60,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const name = (body.name || '').trim();
-    const email = (body.email || '').trim().toLowerCase();
     const location = (body.location || '').trim();
     const bio = (body.bio || '').trim();
 
@@ -78,45 +67,32 @@ export async function POST(request: NextRequest) {
       ? body.specialties.map((value: string) => String(value).trim()).filter(Boolean)
       : [];
 
-    const portfolioUrls = Array.isArray(body.portfolio_urls)
-      ? body.portfolio_urls.map((value: string) => String(value).trim()).filter(Boolean)
-      : [];
-
-    const yearsExperience = Number.isFinite(body.years_experience)
-      ? Number(body.years_experience)
-      : null;
-
-    const isAvailable = Boolean(body.is_available);
-
-    if (!name || !email || !location || specialties.length === 0 || !bio) {
+    if (!name || !location || specialties.length === 0 || !bio) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, email, location, specialties, bio' },
+        { error: 'Missing required fields: name, location, specialties, bio' },
         { status: 400 },
       );
     }
-
-    const slug = makeSlug(name, location);
-    const manage_token = randomUUID().replace(/-/g, '');
 
     const { data, error } = await supabase
       .from('installers')
       .insert({
         name,
-        email,
         location,
         specialties,
         bio,
-        portfolio_urls: portfolioUrls,
-        years_experience: yearsExperience,
-        is_available: isAvailable,
-        slug,
-        manage_token,
       })
       .select('*')
       .single();
 
     if (error) {
       console.error('Error creating installer profile:', error);
+      if (error.code === '42501') {
+        return NextResponse.json(
+          { error: 'Installer profile creation is blocked by Supabase RLS policy. Enable INSERT for this table.' },
+          { status: 403 },
+        );
+      }
       return NextResponse.json({ error: 'Failed to create installer profile' }, { status: 500 });
     }
 

@@ -20,11 +20,11 @@ export async function generateMetadata({ params }: JobDetailPageProps) {
 
   if (!job) {
     return {
-      title: 'Job Not Found | WrapCareers',
+      title: 'Job Not Found',
     };
   }
 
-  const title = `${job.title} at ${job.company_name} — ${job.location_city}, ${job.location_state} | WrapCareers`;
+  const title = `${job.title} at ${job.company_name} — ${job.location_city}, ${job.location_state}`;
   const description = job.description.substring(0, 160) + '...';
   // TODO: Open Graph image: Auto-generated card with job title + company + trade badges
 
