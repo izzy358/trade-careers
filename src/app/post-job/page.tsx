@@ -1,4 +1,10 @@
+import type { Metadata } from 'next';
 import { PostJobWizard } from '@/components/PostJobWizard';
+
+export const metadata: Metadata = {
+  title: 'Post a Job',
+  description: 'Post automotive trade jobs for wrap, tint, PPF, detailing, and coating installers.',
+};
 
 export default function PostJobPage() {
   return (

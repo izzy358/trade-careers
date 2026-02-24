@@ -16,7 +16,7 @@ export async function createClient() {
         set(name: string, value: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value, ...options })
-          } catch (error) {
+          } catch {
             // The `cookies().set()` method can only be called from a Server Component or Route Handler.
             // This error `cookies().set()` is ignored if you're processing a Request with Middleware or a Client Component
           }
@@ -24,7 +24,7 @@ export async function createClient() {
         remove(name: string, options: CookieOptions) {
           try {
             cookieStore.set({ name, value: '', ...options })
-          } catch (error) {
+          } catch {
             // The `cookies().set()` method can only be called from a Server Component or Route Handler.
             // This error `cookies().set()` is ignored if you're processing a Request with Middleware or a Client Component
           }

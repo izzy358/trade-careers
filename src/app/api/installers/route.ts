@@ -1,125 +1,128 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { randomUUID } from 'crypto';
+
+function makeSlug(name: string, location: string) {
+  const base = `${name}-${location}`
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return `${base}-${randomUUID().slice(0, 8)}`;
+}
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
-  const searchParams = request.nextUrl.searchParams;
+  try {
+    const supabase = await createClient();
+    const searchParams = request.nextUrl.searchParams;
 
-  const location = searchParams.get('location') || '';
-  const trade = searchParams.get('trade') || '';
-  const experience = searchParams.get('experience') || '';
-  const availability = searchParams.get('availability'); // 'true' or null
-  const sort = searchParams.get('sort') || 'newest';
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '12');
-  const offset = (page - 1) * limit;
+    const q = searchParams.get('q') || '';
+    const location = searchParams.get('location') || '';
+    const specialty = searchParams.get('specialty') || '';
+    const availability = searchParams.get('availability');
+    const sort = searchParams.get('sort') || 'newest';
+    const page = Math.max(parseInt(searchParams.get('page') || '1', 10), 1);
+    const limit = Math.min(Math.max(parseInt(searchParams.get('limit') || '12', 10), 1), 50);
+    const offset = (page - 1) * limit;
 
-  let query = supabase
-    .from('installers')
-    .select('*');
+    let query = supabase
+      .from('installers')
+      .select('*');
 
-  if (location) {
-    query = query.or(`location_city.ilike.%${location}%,location_state.ilike.%${location}%`);
-  }
-  if (trade) {
-    query = query.contains('trades', [trade]);
-  }
-  if (experience) {
-    // This will need more complex logic based on the spec's experience ranges
-    // For now, a simple equality or greater than
-    if (experience === '<1') {
-      query = query.lt('years_experience', 1);
-    } else if (experience === '1-2') {
-      query = query.gte('years_experience', 1).lte('years_experience', 2);
-    } else if (experience === '3-5') {
-      query = query.gte('years_experience', 3).lte('years_experience', 5);
-    } else if (experience === '6-10') {
-      query = query.gte('years_experience', 6).lte('years_experience', 10);
-    } else if (experience === '10+') {
-      query = query.gte('years_experience', 10);
+    if (q) {
+      query = query.or(`name.ilike.%${q}%,bio.ilike.%${q}%`);
     }
+    if (location) {
+      query = query.ilike('location', `%${location}%`);
+    }
+    if (specialty) {
+      query = query.contains('specialties', [specialty]);
+    }
+    if (availability === 'true') {
+      query = query.eq('is_available', true);
+    }
+
+    if (sort === 'name-asc') {
+      query = query.order('name', { ascending: true });
+    } else if (sort === 'experience-desc') {
+      query = query.order('years_experience', { ascending: false, nullsFirst: false });
+    } else {
+      query = query.order('created_at', { ascending: false });
+    }
+
+    const { data, error } = await query.range(offset, offset + limit - 1);
+
+    if (error) {
+      console.error('Error fetching installers:', error);
+      return NextResponse.json({ error: 'Failed to fetch installers' }, { status: 500 });
+    }
+
+    return NextResponse.json({ installers: data });
+  } catch (error) {
+    console.error('Unhandled installers GET error:', error);
+    return NextResponse.json({ error: 'Unexpected server error' }, { status: 500 });
   }
-  if (availability === 'true') {
-    query = query.eq('is_available', true);
-  }
-
-  // Sorting
-  if (sort === 'newest') {
-    query = query.order('created_at', { ascending: false });
-  } else if (sort === 'experience-desc') {
-    query = query.order('years_experience', { ascending: false });
-  } else if (sort === 'name-asc') {
-    query = query.order('name', { ascending: true });
-  }
-
-  const { data, error } = await query.range(offset, offset + limit - 1);
-
-  if (error) {
-    console.error('Error fetching installers:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  // TODO: Implement total count for pagination
-
-  return NextResponse.json({ installers: data });
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const body = await request.json();
+  try {
+    const supabase = await createClient();
+    const body = await request.json();
 
-  const {
-    name,
-    email,
-    location_city,
-    location_state,
-    trades,
-    years_experience,
-    bio,
-    certifications,
-    portfolio_urls,
-    resume_url,
-    is_available,
-  } = body;
+    const name = (body.name || '').trim();
+    const email = (body.email || '').trim().toLowerCase();
+    const location = (body.location || '').trim();
+    const bio = (body.bio || '').trim();
 
-  // Basic validation
-  if (!name || !email || !location_city || !location_state || !trades || trades.length === 0 || !years_experience || !bio) {
-    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    const specialties = Array.isArray(body.specialties)
+      ? body.specialties.map((value: string) => String(value).trim()).filter(Boolean)
+      : [];
+
+    const portfolioUrls = Array.isArray(body.portfolio_urls)
+      ? body.portfolio_urls.map((value: string) => String(value).trim()).filter(Boolean)
+      : [];
+
+    const yearsExperience = Number.isFinite(body.years_experience)
+      ? Number(body.years_experience)
+      : null;
+
+    const isAvailable = Boolean(body.is_available);
+
+    if (!name || !email || !location || specialties.length === 0 || !bio) {
+      return NextResponse.json(
+        { error: 'Missing required fields: name, email, location, specialties, bio' },
+        { status: 400 },
+      );
+    }
+
+    const slug = makeSlug(name, location);
+    const manage_token = randomUUID().replace(/-/g, '');
+
+    const { data, error } = await supabase
+      .from('installers')
+      .insert({
+        name,
+        email,
+        location,
+        specialties,
+        bio,
+        portfolio_urls: portfolioUrls,
+        years_experience: yearsExperience,
+        is_available: isAvailable,
+        slug,
+        manage_token,
+      })
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Error creating installer profile:', error);
+      return NextResponse.json({ error: 'Failed to create installer profile' }, { status: 500 });
+    }
+
+    return NextResponse.json({ installer: data }, { status: 201 });
+  } catch (error) {
+    console.error('Unhandled installers POST error:', error);
+    return NextResponse.json({ error: 'Unexpected server error' }, { status: 500 });
   }
-
-  // Generate a simple slug
-  const slug = `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '')}-${location_city.toLowerCase().replace(/[^a-z0-9]+/g, '')}-${location_state.toLowerCase()}-${Math.random().toString(36).substring(2, 8)}`;
-
-  // Generate a manage token
-  const manage_token = Math.random().toString(36).substring(2); // Simple token for now
-
-  const { data, error } = await supabase
-    .from('installers')
-    .insert({
-      name,
-      email,
-      location_city,
-      location_state,
-      trades,
-      years_experience,
-      bio,
-      certifications,
-      portfolio_urls,
-      resume_url,
-      is_available,
-      slug,
-      manage_token,
-    })
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error creating installer profile:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  // TODO: Send email with manage link using Resend
-
-  return NextResponse.json({ installer: data }, { status: 201 });
 }

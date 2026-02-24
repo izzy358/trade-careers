@@ -1,22 +1,23 @@
-
 import Link from 'next/link';
 import { tradeColors } from '@/utils/constants';
 
+export type JobCardData = {
+  id: string;
+  slug: string;
+  title: string;
+  company_name: string;
+  location_city: string;
+  location_state: string;
+  trades: string[];
+  pay_min: number;
+  pay_max: number;
+  pay_type: string;
+  job_type: string;
+  created_at: string;
+};
+
 interface JobCardProps {
-  job: {
-    id: string;
-    slug: string;
-    title: string;
-    company_name: string;
-    location_city: string;
-    location_state: string;
-    trades: string[];
-    pay_min: number;
-    pay_max: number;
-    pay_type: string;
-    job_type: string;
-    created_at: string;
-  };
+  job: JobCardData;
 }
 
 export function JobCard({ job }: JobCardProps) {
@@ -37,7 +38,7 @@ export function JobCard({ job }: JobCardProps) {
       <div className="flex flex-wrap gap-2 mb-4">
         {job.trades.map((trade: string) => (
           <span key={trade} className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${tradeColors[trade] || 'bg-gray-700 text-gray-300'}`}>
-            {trade.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
+            {trade.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
           </span>
         ))}
       </div>

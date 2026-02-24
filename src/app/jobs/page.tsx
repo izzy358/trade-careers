@@ -1,11 +1,11 @@
-
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getJobs } from '@/utils/data';
-import { JobCard } from '@/components/JobCard';
+import { JobCard, type JobCardData } from '@/components/JobCard';
 import { JOB_TYPES, TRADES } from '@/utils/constants';
 
 interface JobListingsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     q?: string;
     location?: string;
     trade?: string;
@@ -15,44 +15,47 @@ interface JobListingsPageProps {
     sort?: string;
     page?: string;
     limit?: string;
-  };
+  }>;
 }
 
-export default async function JobListingsPage({ searchParams }: JobListingsPageProps) {
-  const { jobs, error } = await getJobs({
-    q: searchParams.q,
-    location: searchParams.location,
-    trade: searchParams.trade,
-    jobType: searchParams.type,
-    payMin: searchParams.payMin,
-    payMax: searchParams.payMax,
-    sort: searchParams.sort,
-    page: searchParams.page ? parseInt(searchParams.page) : 1,
-    limit: searchParams.limit ? parseInt(searchParams.limit) : 20,
-  });
+export const metadata: Metadata = {
+  title: 'Browse Jobs',
+  description: 'Search open automotive trade roles by location, specialty, pay, and job type.',
+};
 
-  // TODO: Fetch total count for pagination
+export default async function JobListingsPage({ searchParams }: JobListingsPageProps) {
+  const resolvedParams = await searchParams;
+
+  const { jobs, error } = await getJobs({
+    q: resolvedParams.q,
+    location: resolvedParams.location,
+    trade: resolvedParams.trade,
+    jobType: resolvedParams.type,
+    payMin: resolvedParams.payMin,
+    payMax: resolvedParams.payMax,
+    sort: resolvedParams.sort,
+    page: resolvedParams.page ? parseInt(resolvedParams.page, 10) : 1,
+    limit: resolvedParams.limit ? parseInt(resolvedParams.limit, 10) : 20,
+  });
 
   return (
     <>
-      {/* Search Bar (sticky on scroll) */}
       <div className="sticky top-[64px] bg-background z-10 py-4 border-b border-border mb-6">
         <div className="bg-surface p-4 rounded-lg shadow-xl">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <input
               type="text"
-              placeholder="🔍 Keyword"
-              defaultValue={searchParams.q || ''}
+              placeholder="Keyword"
+              defaultValue={resolvedParams.q || ''}
               className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <input
               type="text"
-              placeholder="📍 Location"
-              defaultValue={searchParams.location || ''}
+              placeholder="Location"
+              defaultValue={resolvedParams.location || ''}
               className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          {/* Filters Bar */}
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Trade</option>
@@ -68,7 +71,6 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
             </select>
             <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Pay Range</option>
-              {/* TODO: Pay range slider/inputs */}
             </select>
             <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Radius</option>
@@ -97,7 +99,7 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
             <p>Error loading jobs: {error}</p>
           </div>
         ) : jobs && jobs.length > 0 ? (
-          jobs.map((job: any) => <JobCard key={job.id} job={job} />)
+          jobs.map((job: JobCardData) => <JobCard key={job.id} job={job} />)
         ) : (
           <div className="md:col-span-3 text-center text-text-secondary p-8 rounded-xl bg-surface border border-border">
             <h3 className="text-2xl font-semibold mb-2">No jobs found matching your search.</h3>
@@ -107,10 +109,7 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
         )}
       </div>
 
-      {/* Pagination (TODO) */}
-      <div className="mt-8 flex justify-center">
-        {/* <Pagination /> */}
-      </div>
+      <div className="mt-8 flex justify-center" />
     </>
   );
 }

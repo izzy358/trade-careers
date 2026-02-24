@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: JobDetailPageProps) {
   const supabase = await createClient();
   const { slug } = await params;
 
-  const { data: job, error } = await supabase
+  const { data: job } = await supabase
     .from('jobs')
     .select('title, company_name, location_city, location_state, description, trades')
     .eq('slug', slug)

@@ -22,7 +22,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   // First, get the job_id from the slug
   const { data: jobData, error: jobError } = await supabase
     .from('jobs')
-    .select('id, company_email, title')
+    .select('id')
     .eq('slug', slug)
     .single();
 
@@ -35,8 +35,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   }
 
   const job_id = jobData.id;
-  const employerEmail = jobData.company_email;
-  const jobTitle = jobData.title;
 
   const { data: applicationData, error: applicationError } = await supabase
     .from('applications')

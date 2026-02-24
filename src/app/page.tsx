@@ -1,14 +1,20 @@
 
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getJobs } from '@/utils/data';
-import { JobCard } from '@/components/JobCard';
-import { tradeColors, JOB_TYPES, TRADES } from '@/utils/constants';
+import { JobCard, type JobCardData } from '@/components/JobCard';
+import { JOB_TYPES, TRADES } from '@/utils/constants';
+
+export const metadata: Metadata = {
+  title: 'Automotive Trades Jobs',
+  description: 'Find jobs and installers across vinyl wrap, tint, PPF, ceramic coating, and detailing trades.',
+};
 
 export default async function Home() {
   const { jobs: featuredJobs } = await getJobs({ limit: 3, sort: 'newest', is_featured: true });
   const { jobs: recentJobs } = await getJobs({ limit: 5, sort: 'newest' });
 
-  const RecentJobItem = ({ job }: { job: any }) => (
+  const RecentJobItem = ({ job }: { job: JobCardData }) => (
     <Link href={`/jobs/${job.slug}`} className="bg-surface p-6 rounded-xl border border-border hover:border-primary transition-colors flex items-center">
       <div className="w-12 h-12 bg-gray-700 rounded-full mr-4 flex items-center justify-center text-xl font-bold uppercase">
         {job.company_name ? job.company_name[0] : ''}
@@ -76,7 +82,7 @@ export default async function Home() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {featuredJobs && featuredJobs.length > 0 ? (
-            featuredJobs.map((job: any) => <JobCard key={job.id} job={job} />)
+            featuredJobs.map((job: JobCardData) => <JobCard key={job.id} job={job} />)
           ) : (
             <div className="md:col-span-3 text-center text-text-secondary">No featured jobs available at the moment.</div>
           )}
@@ -91,7 +97,7 @@ export default async function Home() {
         </div>
         <div className="space-y-4">
           {recentJobs && recentJobs.length > 0 ? (
-            recentJobs.map((job: any) => <RecentJobItem key={job.id} job={job} />)
+            recentJobs.map((job: JobCardData) => <RecentJobItem key={job.id} job={job} />)
           ) : (
             <div className="text-center text-text-secondary">No recent jobs available.</div>
           )}

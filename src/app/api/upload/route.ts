@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
   const fileName = `${uuidv4()}.${fileExtension}`;
   const filePath = `${folder}/${fileName}`;
 
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('wrap-careers-assets') // TODO: Make bucket name configurable (env var)
     .upload(filePath, file, { cacheControl: '3600', upsert: false });
 

@@ -65,8 +65,9 @@ export function ApplyForm({ jobSlug }: { jobSlug: string }) {
         }
         const uploadResult = await uploadRes.json();
         resume_url = uploadResult.url;
-      } catch (uploadError: any) {
-        toast.error(`Resume upload failed: ${uploadError.message}`);
+      } catch (uploadError: unknown) {
+        const message = uploadError instanceof Error ? uploadError.message : 'Unknown upload error';
+        toast.error(`Resume upload failed: ${message}`);
         setIsSubmitting(false);
         return;
       }
@@ -96,8 +97,9 @@ export function ApplyForm({ jobSlug }: { jobSlug: string }) {
       toast.success("Application sent successfully!");
       setIsSubmitted(true);
       reset(); // Optionally reset the form
-    } catch (apiError: any) {
-      toast.error(`Application submission failed: ${apiError.message}`);
+    } catch (apiError: unknown) {
+      const message = apiError instanceof Error ? apiError.message : 'Unknown API error';
+      toast.error(`Application submission failed: ${message}`);
     } finally {
       setIsSubmitting(false);
     }

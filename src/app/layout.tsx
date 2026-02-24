@@ -1,23 +1,37 @@
-
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import { AppLayout } from '@/components/AppLayout';
 
-const inter = Inter({ subsets: ['latin'] });
-
 export const metadata: Metadata = {
-  title: 'WrapCareers - Automotive Finishing Trades Job Board',
-  description: 'Find your next job in vinyl wrap, window tint, PPF, ceramic coating, paint correction, and auto detailing.',
+  metadataBase: new URL('https://frolicking-pastelito-510617.netlify.app'),
+  title: {
+    default: 'WrapCareers | Automotive Trades Job Board',
+    template: '%s | WrapCareers',
+  },
+  description:
+    'Find jobs and installer profiles in vinyl wrap, window tint, PPF, ceramic coating, paint correction, and detailing.',
+  openGraph: {
+    title: 'WrapCareers | Automotive Trades Job Board',
+    description:
+      'Find jobs and installer profiles in vinyl wrap, window tint, PPF, ceramic coating, paint correction, and detailing.',
+    url: 'https://frolicking-pastelito-510617.netlify.app',
+    siteName: 'WrapCareers',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'WrapCareers | Automotive Trades Job Board',
+    description:
+      'Find jobs and installer profiles in vinyl wrap, window tint, PPF, ceramic coating, paint correction, and detailing.',
+  },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <AppLayout>{children}</AppLayout>
       </body>
     </html>

@@ -1,4 +1,3 @@
-
 import Link from 'next/link';
 import React from 'react';
 
@@ -9,20 +8,20 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="min-h-screen bg-background text-text-primary">
-      {/* Navbar */}
       <nav className="p-4 bg-surface shadow-lg flex justify-between items-center sticky top-0 z-10">
         <Link href="/" className="text-2xl font-bold text-primary">
           WrapCareers
         </Link>
+
         <div className="space-x-4 hidden md:flex">
           <Link href="/jobs" className="hover:text-primary">Find Jobs</Link>
           <Link href="/post-job" className="hover:text-primary">Post a Job</Link>
           <Link href="/installers" className="hover:text-primary">Browse Installers</Link>
           <Link href="/about" className="hover:text-primary">About</Link>
         </div>
-        {/* Mobile Hamburger (TODO) */}
+
         <div className="md:hidden">
-          <button>☰</button>
+          <Link href="/installers" className="px-3 py-2 border border-border rounded-md text-sm">Installers</Link>
         </div>
       </nav>
 
@@ -30,7 +29,6 @@ export function AppLayout({ children }: AppLayoutProps) {
         {children}
       </main>
 
-      {/* Footer */}
       <footer className="bg-surface p-8 text-text-secondary text-sm mt-8">
         <div className="container mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
@@ -46,7 +44,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <h4 className="font-semibold text-text-primary mb-3">For Installers</h4>
             <ul>
               <li><Link href="/jobs" className="hover:text-primary">Find Jobs</Link></li>
-              <li><Link href="/create-profile" className="hover:text-primary">Create Profile</Link></li>
+              <li><Link href="/installers/register" className="hover:text-primary">Create Profile</Link></li>
             </ul>
           </div>
           <div>

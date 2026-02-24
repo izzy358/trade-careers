@@ -1,4 +1,3 @@
-
 import { createClient } from './supabase/server';
 
 export async function getJobs({
@@ -44,21 +43,20 @@ export async function getJobs({
     query = query.eq('job_type', jobType);
   }
   if (payMin) {
-    query = query.gte('pay_min', parseInt(payMin));
+    query = query.gte('pay_min', parseInt(payMin, 10));
   }
   if (payMax) {
-    query = query.lte('pay_max', parseInt(payMax));
+    query = query.lte('pay_max', parseInt(payMax, 10));
   }
 
   if (is_featured !== undefined) {
     query = query.eq('is_featured', is_featured);
   }
 
-  // Sorting
-  if (sort === 'newest') {
-    query = query.order('created_at', { ascending: false });
-  } else if (sort === 'highest-pay') {
+  if (sort === 'highest-pay') {
     query = query.order('pay_max', { ascending: false }).order('pay_min', { ascending: false });
+  } else {
+    query = query.order('created_at', { ascending: false });
   }
 
   const currentPage = page || 1;
@@ -78,8 +76,7 @@ export async function getJobs({
 export async function getInstallers({
   q,
   location,
-  trade,
-  experience,
+  specialty,
   availability,
   sort,
   page,
@@ -87,8 +84,7 @@ export async function getInstallers({
 }: {
   q?: string;
   location?: string;
-  trade?: string;
-  experience?: string;
+  specialty?: string;
   availability?: boolean;
   sort?: string;
   page?: number;
@@ -104,35 +100,21 @@ export async function getInstallers({
     query = query.or(`name.ilike.%${q}%,bio.ilike.%${q}%`);
   }
   if (location) {
-    query = query.or(`location_city.ilike.%${location}%,location_state.ilike.%${location}%`);
+    query = query.ilike('location', `%${location}%`);
   }
-  if (trade) {
-    query = query.contains('trades', [trade]);
-  }
-  if (experience) {
-    if (experience === '<1') {
-      query = query.lt('years_experience', 1);
-    } else if (experience === '1-2') {
-      query = query.gte('years_experience', 1).lte('years_experience', 2);
-    } else if (experience === '3-5') {
-      query = query.gte('years_experience', 3).lte('years_experience', 5);
-    } else if (experience === '6-10') {
-      query = query.gte('years_experience', 6).lte('years_experience', 10);
-    } else if (experience === '10+') {
-      query = query.gte('years_experience', 10);
-    }
+  if (specialty) {
+    query = query.contains('specialties', [specialty]);
   }
   if (availability) {
     query = query.eq('is_available', true);
   }
 
-  // Sorting
-  if (sort === 'newest') {
-    query = query.order('created_at', { ascending: false });
-  } else if (sort === 'experience-desc') {
-    query = query.order('years_experience', { ascending: false });
-  } else if (sort === 'name-asc') {
+  if (sort === 'name-asc') {
     query = query.order('name', { ascending: true });
+  } else if (sort === 'experience-desc') {
+    query = query.order('years_experience', { ascending: false, nullsFirst: false });
+  } else {
+    query = query.order('created_at', { ascending: false });
   }
 
   const currentPage = page || 1;
