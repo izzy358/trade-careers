@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { checkRateLimit, sanitizePlainText, sanitizeSearchTerm } from '@/utils/api';
 
-const PUBLIC_INSTALLER_COLUMNS = 'id, slug, created_at, name, location, specialties, bio, years_experience, is_available, instagram, tiktok, website, youtube, phone, email';
+const PUBLIC_INSTALLER_COLUMNS = 'id, slug, created_at, name, location, specialties, bio, years_experience, is_available, instagram, tiktok, website, youtube, phone, email, avatar_url';
 
 const installerUpdateSchema = z
   .object({
@@ -19,6 +19,7 @@ const installerUpdateSchema = z
     youtube: z.string().trim().max(200).optional().or(z.literal('')),
     phone: z.string().trim().max(30).optional().or(z.literal('')),
     email: z.email().max(254).optional().or(z.literal('')),
+    avatar_url: z.string().trim().url().max(500).optional().or(z.literal('')),
   })
   .strict();
 
@@ -139,6 +140,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         : {}),
       ...(updates.email !== undefined
         ? { email: updates.email ? sanitizePlainText(updates.email.toLowerCase(), 254) : null }
+        : {}),
+      ...(updates.avatar_url !== undefined
+        ? { avatar_url: updates.avatar_url ? sanitizePlainText(updates.avatar_url, 500) : null }
         : {}),
     };
 

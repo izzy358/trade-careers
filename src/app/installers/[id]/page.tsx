@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import { tradeColors, tradeLabel } from '@/utils/constants';
 import { buildMetadata } from '@/utils/seo';
+import { Avatar } from '@/components/Avatar';
 
 type InstallerProfilePageProps = {
   params: Promise<{ id: string }>;
@@ -22,6 +23,7 @@ type Installer = {
   youtube?: string | null;
   phone?: string | null;
   email?: string | null;
+  avatar_url?: string | null;
 };
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -126,11 +128,13 @@ export default async function InstallerProfilePage({ params }: InstallerProfileP
     <div className="mx-auto max-w-5xl">
       <section className="rounded-2xl border border-border bg-surface p-6 md:p-8">
         <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <h1 className="mb-2 text-4xl font-bold text-white">{installer.name}</h1>
-            <p className="text-text-secondary">{installer.location}</p>
+          <div className="flex items-start gap-4">
+            <Avatar name={installer.name} url={installer.avatar_url} size={84} />
+            <div>
+              <h1 className="mb-2 text-4xl font-bold text-white">{installer.name}</h1>
+              <p className="text-text-secondary">{installer.location}</p>
+            </div>
           </div>
-
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 font-semibold text-white transition-colors hover:bg-orange-700"

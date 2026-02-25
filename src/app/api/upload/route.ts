@@ -18,7 +18,8 @@ export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const formData = await request.formData();
   const file = formData.get('file');
-  const folderInput = typeof formData.get('folder') === 'string' ? formData.get('folder') : 'misc';
+  const rawFolder = formData.get('folder');
+  const folderInput = typeof rawFolder === 'string' ? rawFolder : 'misc';
   const sanitizedFolder = sanitizeSearchTerm(folderInput || 'misc', 40).replace(/\s+/g, '_').toLowerCase();
   const folder = ALLOWED_FOLDERS.has(sanitizedFolder) ? sanitizedFolder : 'misc';
 

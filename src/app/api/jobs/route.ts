@@ -114,6 +114,40 @@ export async function POST(request: NextRequest) {
   }
 
   const supabase = await createClient();
+  const { data: authData } = await supabase.auth.getUser();
+
+  if (!authData.user) {
+    return NextResponse.json(
+      { error: 'You must be logged in as an employer to post a job.' },
+      { status: 401, headers: rateLimit.headers },
+    );
+  }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('account_type')
+    .eq('id', authData.user.id)
+    .maybeSingle();
+
+  if (profile?.account_type !== 'employer') {
+    return NextResponse.json(
+      { error: 'Employer account required to post jobs.' },
+      { status: 403, headers: rateLimit.headers },
+    );
+  }
+
+  const { data: employer } = await supabase
+    .from('employers')
+    .select('id')
+    .eq('user_id', authData.user.id)
+    .maybeSingle();
+
+  if (!employer?.id) {
+    return NextResponse.json(
+      { error: 'Please complete your employer profile in the dashboard before posting jobs.' },
+      { status: 400, headers: rateLimit.headers },
+    );
+  }
 
   let payload: unknown;
   try {
@@ -163,6 +197,7 @@ export async function POST(request: NextRequest) {
       how_to_apply: job.how_to_apply ? sanitizePlainText(job.how_to_apply, 2000) : null,
       slug,
       manage_token: manageToken,
+      employer_id: employer.id,
     })
     .select('id, slug, title, created_at')
     .single();

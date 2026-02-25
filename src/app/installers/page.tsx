@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getInstallers } from '@/utils/data';
 import { TRADES, tradeColors, tradeLabel } from '@/utils/constants';
 import { buildMetadata } from '@/utils/seo';
+import { Avatar } from '@/components/Avatar';
 
 type InstallerListItem = {
   id: string;
@@ -17,6 +18,7 @@ type InstallerListItem = {
   youtube?: string | null;
   phone?: string | null;
   email?: string | null;
+  avatar_url?: string | null;
   created_at: string;
 };
 
@@ -172,15 +174,20 @@ export default async function InstallersPage({ searchParams }: InstallersPagePro
           {installers.map((installer: InstallerListItem) => (
             <article key={installer.id} className="bg-surface border border-border rounded-xl p-6">
               <div className="flex items-start justify-between gap-3 mb-3">
-                <div>
-                  <Link href={`/installers/${installer.id}`} className="text-xl font-semibold hover:text-primary transition-colors">
-                    {installer.name}
-                  </Link>
-                  <p className="text-text-secondary text-sm">{installer.location}</p>
+                <div className="flex items-start gap-3">
+                  <Avatar name={installer.name} url={installer.avatar_url} size={52} />
+                  <div>
+                    <Link href={`/installers/${installer.id}`} className="text-xl font-semibold hover:text-primary transition-colors">
+                      {installer.name}
+                    </Link>
+                    <p className="text-text-secondary text-sm">{installer.location}</p>
+                  </div>
                 </div>
-                {installer.is_available ? (
-                  <span className="text-xs px-2 py-1 rounded-full bg-success/20 text-success">Open to Work</span>
-                ) : null}
+                <div>
+                  {installer.is_available ? (
+                    <span className="text-xs px-2 py-1 rounded-full bg-success/20 text-success">Open to Work</span>
+                  ) : null}
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-2 mb-4">

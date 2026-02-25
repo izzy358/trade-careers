@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 import { checkRateLimit, parseNumberInRange, sanitizePlainText, sanitizeSearchTerm } from '@/utils/api';
 
-const PUBLIC_INSTALLER_COLUMNS = 'id, slug, created_at, name, location, specialties, bio, years_experience, is_available, instagram, tiktok, website, youtube, phone, email';
+const PUBLIC_INSTALLER_COLUMNS = 'id, slug, created_at, name, location, specialties, bio, years_experience, is_available, instagram, tiktok, website, youtube, phone, email, avatar_url';
 
 const postInstallerSchema = z.object({
   name: z.string().trim().min(2).max(120),
@@ -105,6 +105,27 @@ export async function POST(request: NextRequest) {
 
   try {
     const supabase = await createClient();
+    const { data: authData } = await supabase.auth.getUser();
+
+    if (!authData.user) {
+      return NextResponse.json(
+        { error: 'You must be logged in to create an installer profile.' },
+        { status: 401, headers: rateLimit.headers },
+      );
+    }
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('account_type')
+      .eq('id', authData.user.id)
+      .maybeSingle();
+
+    if (profile?.account_type !== 'installer') {
+      return NextResponse.json(
+        { error: 'Installer account required to create installer profile.' },
+        { status: 403, headers: rateLimit.headers },
+      );
+    }
 
     let payload: unknown;
     try {
@@ -131,6 +152,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from('installers')
       .insert({
+        user_id: authData.user.id,
         name: sanitizePlainText(installer.name, 120),
         location: sanitizePlainText(installer.location, 120),
         specialties: installer.specialties.map((value) => sanitizePlainText(value.toLowerCase(), 40)),
@@ -149,6 +171,12 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Error creating installer profile:', error);
+      if (error.code === '23505') {
+        return NextResponse.json(
+          { error: 'You already have an installer profile. Use your dashboard to edit it.' },
+          { status: 409, headers: rateLimit.headers },
+        );
+      }
       if (error.code === '42501') {
         return NextResponse.json(
           { error: 'Installer profile creation is currently unavailable.' },

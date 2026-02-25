@@ -1,5 +1,7 @@
+import { redirect } from 'next/navigation';
 import { PostJobForm } from '@/components/PostJobForm';
 import { buildMetadata } from '@/utils/seo';
+import { getSessionContext } from '@/utils/auth';
 
 export const metadata = buildMetadata({
   title: 'Post Automotive Restyling Jobs | Hire Installers Fast | WrapCareers',
@@ -8,7 +10,17 @@ export const metadata = buildMetadata({
   path: '/post-job',
 });
 
-export default function PostJobPage() {
+export default async function PostJobPage() {
+  const session = await getSessionContext();
+
+  if (!session) {
+    redirect('/login?redirect=/post-job');
+  }
+
+  if (session.accountType !== 'employer') {
+    redirect('/dashboard');
+  }
+
   return (
     <div className="mx-auto max-w-4xl rounded-2xl bg-[#0d1117] p-4 md:p-6">
       <div className="mb-6 md:mb-8">

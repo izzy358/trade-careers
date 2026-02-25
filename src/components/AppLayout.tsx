@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import React, { useState } from 'react';
+import { AuthNav } from '@/components/AuthNav';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -31,6 +32,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 {link.label}
               </Link>
             ))}
+            <AuthNav />
           </div>
 
           <button
@@ -57,6 +59,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                   {link.label}
                 </Link>
               ))}
+              <AuthNav mobile onNavigate={() => setMobileOpen(false)} />
             </div>
           </div>
         ) : null}
