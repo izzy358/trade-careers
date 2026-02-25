@@ -27,6 +27,10 @@ export default function SignupPage() {
       const { data, error: signupError } = await supabase.auth.signUp({
         email: email.trim(),
         password,
+        options: {
+          data: { account_type: accountType },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
 
       if (signupError) {
@@ -37,12 +41,13 @@ export default function SignupPage() {
         throw new Error('Signup did not return a user account.');
       }
 
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({ id: data.user.id, account_type: accountType }, { onConflict: 'id' });
-
-      if (profileError) {
-        throw new Error('Account created, but profile setup failed. Please log in and try again.');
+      // Try to create profile now (works if email confirmation is disabled)
+      // If it fails due to RLS (user not confirmed yet), that's OK —
+      // the auth callback or login page will create it from user metadata
+      if (data.session) {
+        await supabase
+          .from('profiles')
+          .upsert({ id: data.user.id, account_type: accountType }, { onConflict: 'id' });
       }
 
       if (!data.session) {

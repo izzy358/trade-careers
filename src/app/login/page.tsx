@@ -36,11 +36,20 @@ export default function LoginPage() {
         throw new Error('Unable to sign in right now.');
       }
 
-      const { data: profile } = await supabase
+      let { data: profile } = await supabase
         .from('profiles')
         .select('account_type')
         .eq('id', data.user.id)
         .maybeSingle();
+
+      // If profile doesn't exist yet (email confirmation flow), create it from user metadata
+      if (!profile) {
+        const metaType = data.user.user_metadata?.account_type || 'installer';
+        await supabase
+          .from('profiles')
+          .upsert({ id: data.user.id, account_type: metaType }, { onConflict: 'id' });
+        profile = { account_type: metaType };
+      }
 
       const accountType = (profile?.account_type as AccountType | undefined) ?? null;
       if (redirectTo !== '/dashboard') {
