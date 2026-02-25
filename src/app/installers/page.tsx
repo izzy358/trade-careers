@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import type { Metadata } from 'next';
 import { getInstallers } from '@/utils/data';
 import { TRADES, tradeColors, tradeLabel } from '@/utils/constants';
+import { buildMetadata } from '@/utils/seo';
 
 type InstallerListItem = {
   id: string;
@@ -69,10 +69,12 @@ type InstallersPageProps = {
   }>;
 };
 
-export const metadata: Metadata = {
-  title: 'Installer Directory',
-  description: 'Browse installer profiles by location and specialty for wrap, tint, PPF, and detailing trades.',
-};
+export const metadata = buildMetadata({
+  title: 'Installer Directory | Automotive Restyling Talent | WrapCareers',
+  description:
+    'Browse installer profiles for vinyl wrap, window tint, PPF, ceramic coating, detailing, and paint correction.',
+  path: '/installers',
+});
 
 export default async function InstallersPage({ searchParams }: InstallersPageProps) {
   const resolvedParams = await searchParams;
@@ -159,7 +161,7 @@ export default async function InstallersPage({ searchParams }: InstallersPagePro
 
       {error ? (
         <div className="p-6 rounded-xl bg-surface border border-error text-error">
-          Failed to load installer profiles: {error}
+          We could not load installer profiles right now. Please try again shortly.
         </div>
       ) : installers.length === 0 ? (
         <div className="p-8 rounded-xl bg-surface border border-border text-center text-text-secondary">

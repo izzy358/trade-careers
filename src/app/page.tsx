@@ -1,14 +1,16 @@
 
 import Link from 'next/link';
-import type { Metadata } from 'next';
 import { getJobs } from '@/utils/data';
 import { JobCard, type JobCardData } from '@/components/JobCard';
 import { JOB_TYPES, TRADES } from '@/utils/constants';
+import { buildMetadata } from '@/utils/seo';
 
-export const metadata: Metadata = {
-  title: 'Automotive Trades Jobs',
-  description: 'Find jobs and installers across vinyl wrap, tint, PPF, ceramic coating, and detailing trades.',
-};
+export const metadata = buildMetadata({
+  title: 'WrapCareers — Jobs & Installers for Automotive Restyling',
+  description:
+    'Find automotive restyling jobs and installer talent across vinyl wrap, window tint, PPF, ceramic coating, paint correction, and detailing.',
+  path: '/',
+});
 
 export default async function Home() {
   const { jobs: featuredJobs } = await getJobs({ limit: 3, sort: 'newest', is_featured: true });

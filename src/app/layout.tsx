@@ -1,29 +1,17 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { AppLayout } from '@/components/AppLayout';
+import { SITE_NAME, SITE_URL, buildMetadata } from '@/utils/seo';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://frolicking-pastelito-510617.netlify.app'),
-  title: {
-    default: 'WrapCareers | Automotive Trades Job Board',
-    template: '%s | WrapCareers',
-  },
-  description:
-    'Find jobs and installer profiles in vinyl wrap, window tint, PPF, ceramic coating, paint correction, and detailing.',
-  openGraph: {
-    title: 'WrapCareers | Automotive Trades Job Board',
+  metadataBase: new URL(SITE_URL),
+  ...buildMetadata({
+    title: 'WrapCareers — Jobs & Installers for Automotive Restyling',
     description:
-      'Find jobs and installer profiles in vinyl wrap, window tint, PPF, ceramic coating, paint correction, and detailing.',
-    url: 'https://frolicking-pastelito-510617.netlify.app',
-    siteName: 'WrapCareers',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'WrapCareers | Automotive Trades Job Board',
-    description:
-      'Find jobs and installer profiles in vinyl wrap, window tint, PPF, ceramic coating, paint correction, and detailing.',
-  },
+      'Automotive restyling hiring platform for PPF, vinyl wrap, window tint, ceramic coating, paint correction, and detailing jobs.',
+    path: '/',
+  }),
+  applicationName: SITE_NAME,
 };
 
 export default function RootLayout({

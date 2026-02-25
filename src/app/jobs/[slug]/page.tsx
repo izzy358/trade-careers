@@ -1,13 +1,15 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import { tradeColors, tradeLabel } from '@/utils/constants';
 import { JobApplicationSection } from '@/components/JobApplicationSection';
+import { buildMetadata } from '@/utils/seo';
 
 interface JobDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: JobDetailPageProps) {
+export async function generateMetadata({ params }: JobDetailPageProps): Promise<Metadata> {
   const supabase = await createClient();
   const { slug } = await params;
 
@@ -18,22 +20,22 @@ export async function generateMetadata({ params }: JobDetailPageProps) {
     .single();
 
   if (!job) {
-    return {
-      title: 'Job Not Found',
-    };
+    return buildMetadata({
+      title: 'Job Not Found | WrapCareers',
+      description: 'The requested job listing could not be found.',
+      path: `/jobs/${encodeURIComponent(slug)}`,
+    });
   }
 
-  const title = `${job.title} at ${job.company_name} - ${job.location_city}, ${job.location_state}`;
-  const description = `${job.description.substring(0, 157)}...`;
+  const title = `${job.title} at ${job.company_name} | ${job.location_city}, ${job.location_state} | WrapCareers`;
+  const description = `${job.description.substring(0, 150)}${job.description.length > 150 ? '...' : ''}`;
 
-  return {
+  return buildMetadata({
     title,
     description,
-    openGraph: {
-      title,
-      description,
-    },
-  };
+    path: `/jobs/${encodeURIComponent(slug)}`,
+    type: 'article',
+  });
 }
 
 function payLabel(payType?: string | null) {

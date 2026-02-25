@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import { tradeColors, tradeLabel } from '@/utils/constants';
+import { buildMetadata } from '@/utils/seo';
 
 type InstallerProfilePageProps = {
   params: Promise<{ id: string }>;
@@ -81,16 +82,19 @@ export async function generateMetadata({ params }: InstallerProfilePageProps): P
   const installer = await getInstaller(id);
 
   if (!installer) {
-    return {
-      title: 'Installer Not Found',
+    return buildMetadata({
+      title: 'Installer Not Found | WrapCareers',
       description: 'The requested installer profile does not exist.',
-    };
+      path: `/installers/${encodeURIComponent(id)}`,
+    });
   }
 
-  return {
-    title: `${installer.name} Installer Profile`,
+  return buildMetadata({
+    title: `${installer.name} Installer Profile | ${installer.location} | WrapCareers`,
     description: `${installer.name} in ${installer.location}. Specialties: ${(installer.specialties || []).map(tradeLabel).join(', ') || 'General automotive trades'}`,
-  };
+    path: `/installers/${encodeURIComponent(id)}`,
+    type: 'article',
+  });
 }
 
 export default async function InstallerProfilePage({ params }: InstallerProfilePageProps) {

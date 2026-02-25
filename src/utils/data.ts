@@ -1,4 +1,5 @@
 import { createClient } from './supabase/server';
+import { sanitizeSearchTerm } from './api';
 
 export async function getJobs({
   q,
@@ -31,10 +32,16 @@ export async function getJobs({
     .eq('status', 'active');
 
   if (q) {
-    query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%,company_name.ilike.%${q}%`);
+    const safeQ = sanitizeSearchTerm(q);
+    if (safeQ) {
+      query = query.or(`title.ilike.%${safeQ}%,description.ilike.%${safeQ}%,company_name.ilike.%${safeQ}%`);
+    }
   }
   if (location) {
-    query = query.or(`location_city.ilike.%${location}%,location_state.ilike.%${location}%`);
+    const safeLocation = sanitizeSearchTerm(location);
+    if (safeLocation) {
+      query = query.or(`location_city.ilike.%${safeLocation}%,location_state.ilike.%${safeLocation}%`);
+    }
   }
   if (trade) {
     query = query.contains('trades', [trade]);
@@ -97,10 +104,16 @@ export async function getInstallers({
     .select('*');
 
   if (q) {
-    query = query.or(`name.ilike.%${q}%,bio.ilike.%${q}%`);
+    const safeQ = sanitizeSearchTerm(q);
+    if (safeQ) {
+      query = query.or(`name.ilike.%${safeQ}%,bio.ilike.%${safeQ}%`);
+    }
   }
   if (location) {
-    query = query.ilike('location', `%${location}%`);
+    const safeLocation = sanitizeSearchTerm(location);
+    if (safeLocation) {
+      query = query.ilike('location', `%${safeLocation}%`);
+    }
   }
   if (specialty) {
     query = query.contains('specialties', [specialty]);

@@ -1,10 +1,12 @@
-import type { Metadata } from 'next';
 import { PostJobForm } from '@/components/PostJobForm';
+import { buildMetadata } from '@/utils/seo';
 
-export const metadata: Metadata = {
-  title: 'Post a Job',
-  description: 'Post automotive trade jobs for wrap, tint, PPF, detailing, and coating installers.',
-};
+export const metadata = buildMetadata({
+  title: 'Post Automotive Restyling Jobs | Hire Installers Fast | WrapCareers',
+  description:
+    'Post automotive restyling job openings for vinyl wrap, tint, PPF, ceramic coating, and detailing professionals.',
+  path: '/post-job',
+});
 
 export default function PostJobPage() {
   return (

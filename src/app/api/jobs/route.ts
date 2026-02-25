@@ -1,25 +1,67 @@
-
+import { randomBytes } from 'crypto';
+import { z } from 'zod';
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
+import { checkRateLimit, parseNumberInRange, sanitizePlainText, sanitizeSearchTerm } from '@/utils/api';
+
+const PUBLIC_JOB_COLUMNS = 'id, slug, created_at, title, company_name, company_logo_url, location_city, location_state, trades, job_type, pay_min, pay_max, pay_type, description, requirements, how_to_apply, is_featured, status';
+
+const jobTypeSchema = z.enum(['full-time', 'part-time', 'contract', 'gig']);
+
+const postJobSchema = z.object({
+  title: z.string().trim().min(3).max(120),
+  company_name: z.string().trim().min(2).max(120),
+  company_email: z.email().max(254),
+  company_logo_url: z.string().trim().url().max(500).optional().or(z.literal('')),
+  location_city: z.string().trim().min(2).max(80),
+  location_state: z.string().trim().length(2),
+  trades: z.array(z.string().trim().min(1).max(40)).min(1).max(6),
+  job_type: jobTypeSchema,
+  pay_min: z.number().int().min(0).max(1000000).optional(),
+  pay_max: z.number().int().min(0).max(1000000).optional(),
+  pay_type: z.enum(['hourly', 'salary']).optional(),
+  description: z.string().trim().min(10).max(8000),
+  requirements: z.string().trim().max(4000).optional().or(z.literal('')),
+  how_to_apply: z.string().trim().max(2000).optional().or(z.literal('')),
+});
+
+function createSlug(title: string, city: string, state: string) {
+  const normalizedTitle = sanitizeSearchTerm(title.toLowerCase(), 80).replace(/\s+/g, '-').replace(/-+/g, '-');
+  const normalizedCity = sanitizeSearchTerm(city.toLowerCase(), 40).replace(/\s+/g, '-').replace(/-+/g, '-');
+  const normalizedState = sanitizeSearchTerm(state.toLowerCase(), 2);
+  const suffix = randomBytes(3).toString('hex');
+
+  return `${normalizedTitle}-${normalizedCity}-${normalizedState}-${suffix}`
+    .replace(/^-+|-+$/g, '')
+    .replace(/--+/g, '-');
+}
 
 export async function GET(request: NextRequest) {
+  const rateLimit = checkRateLimit(request, { key: 'jobs:get', maxRequests: 120, windowMs: 60_000 });
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait and try again.' },
+      { status: 429, headers: rateLimit.headers },
+    );
+  }
+
   const supabase = await createClient();
   const searchParams = request.nextUrl.searchParams;
 
-  const q = searchParams.get('q') || '';
-  const location = searchParams.get('location') || '';
-  const trade = searchParams.get('trade') || '';
+  const q = sanitizeSearchTerm(searchParams.get('q') || '');
+  const location = sanitizeSearchTerm(searchParams.get('location') || '');
+  const trade = sanitizeSearchTerm(searchParams.get('trade') || '', 40);
   const jobType = searchParams.get('type') || '';
   const payMin = searchParams.get('payMin');
   const payMax = searchParams.get('payMax');
   const sort = searchParams.get('sort') || 'newest';
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '20');
+  const page = parseNumberInRange(searchParams.get('page'), 1, 10_000, 1);
+  const limit = parseNumberInRange(searchParams.get('limit'), 1, 50, 20);
   const offset = (page - 1) * limit;
 
   let query = supabase
     .from('jobs')
-    .select('*')
+    .select(PUBLIC_JOB_COLUMNS)
     .eq('status', 'active');
 
   if (q) {
@@ -31,100 +73,107 @@ export async function GET(request: NextRequest) {
   if (trade) {
     query = query.contains('trades', [trade]);
   }
-  if (jobType) {
+  if (jobType && jobTypeSchema.safeParse(jobType).success) {
     query = query.eq('job_type', jobType);
   }
   if (payMin) {
-    query = query.gte('pay_min', parseInt(payMin));
+    const safePayMin = parseNumberInRange(payMin, 0, 1_000_000, 0);
+    query = query.gte('pay_min', safePayMin);
   }
   if (payMax) {
-    query = query.lte('pay_max', parseInt(payMax));
+    const safePayMax = parseNumberInRange(payMax, 0, 1_000_000, 1_000_000);
+    query = query.lte('pay_max', safePayMax);
   }
 
-  // Sorting
-  if (sort === 'newest') {
-    query = query.order('created_at', { ascending: false });
-  } else if (sort === 'closest' && location) {
-    // Requires lat/lng for jobs and user's location, will implement later with geocoding
-    // For now, closest will just be newest if no proper location data exists
-    query = query.order('created_at', { ascending: false });
-  } else if (sort === 'highest-pay') {
+  if (sort === 'highest-pay') {
     query = query.order('pay_max', { ascending: false }).order('pay_min', { ascending: false });
+  } else {
+    query = query.order('created_at', { ascending: false });
   }
 
   const { data, error } = await query.range(offset, offset + limit - 1);
 
   if (error) {
     console.error('Error fetching jobs:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Unable to load jobs at this time.' },
+      { status: 500, headers: rateLimit.headers },
+    );
   }
 
-  // TODO: Implement total count for pagination
-
-  return NextResponse.json({ jobs: data });
+  return NextResponse.json({ jobs: data || [] }, { headers: rateLimit.headers });
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
-  const body = await request.json();
-
-  const {
-    title,
-    company_name,
-    company_email,
-    company_logo_url,
-    location_city,
-    location_state,
-    trades,
-    job_type,
-    pay_min,
-    pay_max,
-    pay_type,
-    description,
-    requirements,
-    how_to_apply,
-  } = body;
-
-  // Basic validation (more robust validation will be needed on the client-side and potentially here)
-  if (!title || !company_name || !company_email || !location_city || !location_state || !trades || trades.length === 0 || !job_type || !description) {
-    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+  const rateLimit = checkRateLimit(request, { key: 'jobs:post', maxRequests: 20, windowMs: 60_000 });
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait and try again.' },
+      { status: 429, headers: rateLimit.headers },
+    );
   }
 
-  // Generate a simple slug (can be made more robust)
-  const slug = `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-*|-*$/g, '')}-${location_city.toLowerCase().replace(/[^a-z0-9]+/g, '')}-${location_state.toLowerCase()}-${Math.random().toString(36).substring(2, 8)}`;
+  const supabase = await createClient();
 
-  // Generate a manage token
-  const manage_token = Math.random().toString(36).substring(2); // Simple token for now
+  let payload: unknown;
+  try {
+    payload = await request.json();
+  } catch {
+    return NextResponse.json(
+      { error: 'Invalid request body.' },
+      { status: 400, headers: rateLimit.headers },
+    );
+  }
+
+  const parsed = postJobSchema.safeParse(payload);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Invalid job posting fields. Please review and try again.' },
+      { status: 400, headers: rateLimit.headers },
+    );
+  }
+
+  const job = parsed.data;
+  if (typeof job.pay_min === 'number' && typeof job.pay_max === 'number' && job.pay_max < job.pay_min) {
+    return NextResponse.json(
+      { error: 'Pay range is invalid.' },
+      { status: 400, headers: rateLimit.headers },
+    );
+  }
+
+  const slug = createSlug(job.title, job.location_city, job.location_state);
+  const manageToken = randomBytes(24).toString('hex');
 
   const { data, error } = await supabase
     .from('jobs')
     .insert({
-      title,
-      company_name,
-      company_email,
-      company_logo_url,
-      location_city,
-      location_state,
-      trades,
-      job_type,
-      pay_min,
-      pay_max,
-      pay_type,
-      description,
-      requirements,
-      how_to_apply,
+      title: sanitizePlainText(job.title, 120),
+      company_name: sanitizePlainText(job.company_name, 120),
+      company_email: sanitizePlainText(job.company_email.toLowerCase(), 254),
+      company_logo_url: job.company_logo_url ? sanitizePlainText(job.company_logo_url, 500) : null,
+      location_city: sanitizePlainText(job.location_city, 80),
+      location_state: sanitizePlainText(job.location_state.toUpperCase(), 2),
+      trades: job.trades.map((value) => sanitizePlainText(value.toLowerCase(), 40)),
+      job_type: job.job_type,
+      pay_min: job.pay_min ?? null,
+      pay_max: job.pay_max ?? null,
+      pay_type: job.pay_type ?? null,
+      description: sanitizePlainText(job.description, 8000),
+      requirements: job.requirements ? sanitizePlainText(job.requirements, 4000) : null,
+      how_to_apply: job.how_to_apply ? sanitizePlainText(job.how_to_apply, 2000) : null,
       slug,
-      manage_token,
+      manage_token: manageToken,
     })
-    .select()
+    .select('id, slug, title, created_at')
     .single();
 
   if (error) {
     console.error('Error creating job:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Unable to publish job right now. Please try again.' },
+      { status: 500, headers: rateLimit.headers },
+    );
   }
 
-  // TODO: Send email with manage link using Resend
-
-  return NextResponse.json({ job: data }, { status: 201 });
+  return NextResponse.json({ job: data }, { status: 201, headers: rateLimit.headers });
 }

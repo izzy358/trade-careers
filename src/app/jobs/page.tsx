@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import type { Metadata } from 'next';
 import { getJobs } from '@/utils/data';
 import { JobCard, type JobCardData } from '@/components/JobCard';
 import { JOB_TYPES, TRADES } from '@/utils/constants';
+import { buildMetadata } from '@/utils/seo';
 
 interface JobListingsPageProps {
   searchParams: Promise<{
@@ -18,10 +18,12 @@ interface JobListingsPageProps {
   }>;
 }
 
-export const metadata: Metadata = {
-  title: 'Browse Jobs',
-  description: 'Search open automotive trade roles by location, specialty, pay, and job type.',
-};
+export const metadata = buildMetadata({
+  title: 'Automotive Restyling Jobs | Vinyl Wrap, Tint, PPF Careers | WrapCareers',
+  description:
+    'Browse automotive restyling jobs by location, pay, and trade specialty including vinyl wrap, window tint, PPF, and detailing.',
+  path: '/jobs',
+});
 
 export default async function JobListingsPage({ searchParams }: JobListingsPageProps) {
   const resolvedParams = await searchParams;
@@ -96,7 +98,7 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {error ? (
           <div className="md:col-span-3 text-center text-error p-8 rounded-xl bg-surface border border-error">
-            <p>Error loading jobs: {error}</p>
+            <p>We could not load jobs right now. Please refresh and try again.</p>
           </div>
         ) : jobs && jobs.length > 0 ? (
           jobs.map((job: JobCardData) => <JobCard key={job.id} job={job} />)
