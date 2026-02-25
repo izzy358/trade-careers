@@ -40,7 +40,7 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
 
   return (
     <>
-      <div className="sticky top-[64px] bg-background z-10 py-4 border-b border-border mb-6">
+      <div className="z-10 mb-6 border-b border-border bg-background py-4 md:sticky md:top-[72px]">
         <div className="bg-surface p-4 rounded-lg shadow-xl">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <input
@@ -56,30 +56,30 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
               className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+          <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
+            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Trade</option>
               {TRADES.map((trade) => (
                 <option key={trade.value} value={trade.value}>{trade.label}</option>
               ))}
             </select>
-            <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Job Type</option>
               {JOB_TYPES.map((type) => (
                 <option key={type.value} value={type.value}>{type.label}</option>
               ))}
             </select>
-            <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Pay Range</option>
             </select>
-            <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Radius</option>
               <option value="25">25mi</option>
               <option value="50">50mi</option>
               <option value="100">100mi</option>
               <option value="any">Anywhere</option>
             </select>
-            <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Sort: Newest</option>
               <option value="closest">Closest</option>
               <option value="highest-pay">Highest Pay</option>

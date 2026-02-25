@@ -15,15 +15,15 @@ export default async function Home() {
   const { jobs: recentJobs } = await getJobs({ limit: 5, sort: 'newest' });
 
   const RecentJobItem = ({ job }: { job: JobCardData }) => (
-    <Link href={`/jobs/${job.slug}`} className="bg-surface p-6 rounded-xl border border-border hover:border-primary transition-colors flex items-center">
-      <div className="w-12 h-12 bg-gray-700 rounded-full mr-4 flex items-center justify-center text-xl font-bold uppercase">
+    <Link href={`/jobs/${job.slug}`} className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5 transition-colors hover:border-primary sm:flex-row sm:items-center sm:p-6">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-700 text-xl font-bold uppercase">
         {job.company_name ? job.company_name[0] : ''}
       </div>
       <div className="flex-grow">
-        <h3 className="text-xl font-semibold hover:text-primary transition-colors">{job.title}</h3>
+        <h3 className="text-lg font-semibold transition-colors hover:text-primary md:text-xl">{job.title}</h3>
         <p className="text-text-secondary">{job.company_name} · {job.location_city}, {job.location_state}</p>
       </div>
-      <div className="text-right">
+      <div className="text-left sm:text-right">
         <p className="text-lg font-semibold">${job.pay_min}-{job.pay_max}/{job.pay_type === 'hourly' ? 'hr' : 'yr'}</p>
         <p className="text-text-muted text-sm">{new Date(job.created_at).toLocaleDateString()}</p>
       </div>
@@ -33,8 +33,8 @@ export default async function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-gray-900 to-surface rounded-xl p-8 md:p-16 text-center my-8">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">Find Your Next Install Job</h1>
+      <section className="relative my-8 rounded-xl bg-gradient-to-r from-gray-900 to-surface p-6 text-center md:p-16">
+        <h1 className="mb-4 text-3xl font-bold md:text-5xl">Find Your Next Install Job</h1>
         <p className="text-lg md:text-xl text-text-secondary mb-8">
           The job board for wrap, tint, PPF & coating professionals
         </p>

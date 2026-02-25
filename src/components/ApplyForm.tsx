@@ -1,105 +1,82 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { FormEvent, useState } from 'react';
 
-const applySchema = z.object({
-  applicant_name: z.string().min(2, "Name is required"),
-  applicant_email: z.string().email("Invalid email address"),
-  phone: z.string().optional(), // TODO: Add US phone format validation
-  message: z.string().min(50, "Message must be at least 50 characters").max(2000, "Message cannot exceed 2000 characters"),
-  portfolio_link: z.string().url("Invalid URL").optional().or(z.literal('')), // Allow empty string for optional URL
-  resume: z.any() // File object, handle validation separately
-});
+type ApplyData = {
+  name: string;
+  email: string;
+  phone: string;
+  message: string;
+};
 
-type ApplyFormInputs = z.infer<typeof applySchema>;
+type ApplyErrors = Partial<Record<keyof ApplyData, string>>;
+
+const initialData: ApplyData = {
+  name: '',
+  email: '',
+  phone: '',
+  message: '',
+};
 
 export function ApplyForm({ jobSlug }: { jobSlug: string }) {
+  const [formData, setFormData] = useState<ApplyData>(initialData);
+  const [errors, setErrors] = useState<ApplyErrors>({});
+  const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<ApplyFormInputs>({
-    resolver: zodResolver(applySchema),
-  });
+  const validate = () => {
+    const nextErrors: ApplyErrors = {};
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      if (file.type !== 'application/pdf') {
-        toast.error("Resume must be a PDF.");
-        event.target.value = ''; // Clear the input
-        return;
-      }
-      if (file.size > 5 * 1024 * 1024) { // 5MB
-        toast.error("Resume file size cannot exceed 5MB.");
-        event.target.value = ''; // Clear the input
-        return;
-      }
+    if (!formData.name.trim()) nextErrors.name = 'Name is required.';
+
+    if (!formData.email.trim()) {
+      nextErrors.email = 'Email is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      nextErrors.email = 'Enter a valid email address.';
     }
+
+    if (!formData.phone.trim()) nextErrors.phone = 'Phone number is required.';
+    if (!formData.message.trim()) nextErrors.message = 'Cover letter/message is required.';
+
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
 
-  const onSubmit = async (data: ApplyFormInputs) => {
+  const updateField = <K extends keyof ApplyData>(field: K, value: ApplyData[K]) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setSubmitError('');
+
+    if (!validate()) return;
+
     setIsSubmitting(true);
-    let resume_url = '';
-
-    if (data.resume && data.resume[0]) {
-      const resumeFile = data.resume[0];
-      const formData = new FormData();
-      formData.append('file', resumeFile);
-      formData.append('folder', 'resumes');
-
-      try {
-        const uploadRes = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        });
-
-        if (!uploadRes.ok) {
-          const errorData = await uploadRes.json();
-          throw new Error(errorData.error || 'Failed to upload resume');
-        }
-        const uploadResult = await uploadRes.json();
-        resume_url = uploadResult.url;
-      } catch (uploadError: unknown) {
-        const message = uploadError instanceof Error ? uploadError.message : 'Unknown upload error';
-        toast.error(`Resume upload failed: ${message}`);
-        setIsSubmitting(false);
-        return;
-      }
-    }
 
     try {
-      const applicationRes = await fetch(`/api/jobs/${jobSlug}/apply`, {
+      const response = await fetch(`/api/jobs/${jobSlug}/apply`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          applicant_name: data.applicant_name,
-          applicant_email: data.applicant_email,
-          message: data.message,
-          phone: data.phone,
-          portfolio_link: data.portfolio_link,
-          resume_url,
+          ...formData,
+          resume_url: '',
         }),
       });
 
-      if (!applicationRes.ok) {
-        const errorData = await applicationRes.json();
-        throw new Error(errorData.error || 'Failed to submit application');
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload.error || 'Failed to submit application.');
       }
 
-      toast.success("Application sent successfully!");
       setIsSubmitted(true);
-      reset(); // Optionally reset the form
-    } catch (apiError: unknown) {
-      const message = apiError instanceof Error ? apiError.message : 'Unknown API error';
-      toast.error(`Application submission failed: ${message}`);
+      setFormData(initialData);
+      setErrors({});
+    } catch (error: unknown) {
+      setSubmitError(error instanceof Error ? error.message : 'Unexpected error while submitting application.');
     } finally {
       setIsSubmitting(false);
     }
@@ -107,99 +84,75 @@ export function ApplyForm({ jobSlug }: { jobSlug: string }) {
 
   if (isSubmitted) {
     return (
-      <div className="text-center p-8 bg-surface rounded-xl border border-success text-success">
-        <h3 className="text-2xl font-semibold mb-2">✅ Application Sent!</h3>
-        <p className="text-text-secondary">Your application has been successfully sent. The company will reach out if interested.</p>
-        <Link href="/jobs" className="mt-4 inline-block px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-orange-700 transition-colors">
-          Browse More Jobs
+      <div className="rounded-xl border border-green-500/60 bg-green-500/10 p-6 text-center">
+        <h3 className="mb-2 text-2xl font-semibold text-green-400">Application Submitted</h3>
+        <p className="mb-4 text-text-secondary">
+          Thanks for applying. The employer will review your information and contact you directly.
+        </p>
+        <Link href="/jobs" className="text-primary hover:underline">
+          Browse more jobs
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="bg-surface p-8 rounded-xl border border-border">
-      <h2 className="text-2xl font-bold mb-6">Apply for this position</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div>
-          <label htmlFor="applicant_name" className="block text-sm font-medium text-text-secondary mb-2">Your Name *</label>
-          <input
-            type="text"
-            id="applicant_name"
-            {...register('applicant_name')}
-            className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-          {errors.applicant_name && <p className="text-error text-sm mt-1">{errors.applicant_name.message as string}</p>}
-        </div>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <div>
+        <label className="mb-2 block text-sm text-text-secondary">Name *</label>
+        <input
+          value={formData.name}
+          onChange={(event) => updateField('name', event.target.value)}
+          className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        {errors.name ? <p className="mt-1 text-sm text-error">{errors.name}</p> : null}
+      </div>
 
-        <div>
-          <label htmlFor="applicant_email" className="block text-sm font-medium text-text-secondary mb-2">Your Email *</label>
-          <input
-            type="email"
-            id="applicant_email"
-            {...register('applicant_email')}
-            className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-          {errors.applicant_email && <p className="text-error text-sm mt-1">{errors.applicant_email.message as string}</p>}
-        </div>
+      <div>
+        <label className="mb-2 block text-sm text-text-secondary">Email *</label>
+        <input
+          type="email"
+          value={formData.email}
+          onChange={(event) => updateField('email', event.target.value)}
+          className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        {errors.email ? <p className="mt-1 text-sm text-error">{errors.email}</p> : null}
+      </div>
 
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-text-secondary mb-2">Phone (optional)</label>
-          <input
-            type="tel"
-            id="phone"
-            {...register('phone')}
-            className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-          {errors.phone && <p className="text-error text-sm mt-1">{errors.phone.message as string}</p>}
-        </div>
+      <div>
+        <label className="mb-2 block text-sm text-text-secondary">Phone *</label>
+        <input
+          type="tel"
+          value={formData.phone}
+          onChange={(event) => updateField('phone', event.target.value)}
+          className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        {errors.phone ? <p className="mt-1 text-sm text-error">{errors.phone}</p> : null}
+      </div>
 
-        <div>
-          <label htmlFor="message" className="block text-sm font-medium text-text-secondary mb-2">Message *</label>
-          <textarea
-            id="message"
-            rows={5}
-            {...register('message')}
-            placeholder="Tell them why you're a great fit..."
-            className="w-full p-3 rounded-lg bg-border border border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
-          ></textarea>
-          {errors.message && <p className="text-error text-sm mt-1">{errors.message.message as string}</p>}
-        </div>
+      <div>
+        <label className="mb-2 block text-sm text-text-secondary">Cover Letter / Message *</label>
+        <textarea
+          rows={6}
+          value={formData.message}
+          onChange={(event) => updateField('message', event.target.value)}
+          className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+          placeholder="Introduce yourself, your trade experience, and availability."
+        />
+        {errors.message ? <p className="mt-1 text-sm text-error">{errors.message}</p> : null}
+      </div>
 
-        <div>
-          <label htmlFor="portfolio_link" className="block text-sm font-medium text-text-secondary mb-2">Portfolio Link (Instagram, website, or Google Drive)</label>
-          <input
-            type="url"
-            id="portfolio_link"
-            {...register('portfolio_link')}
-            className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-          {errors.portfolio_link && <p className="text-error text-sm mt-1">{errors.portfolio_link.message as string}</p>}
-        </div>
+      {submitError ? (
+        <div className="rounded-lg border border-error bg-error/10 p-3 text-sm text-error">{submitError}</div>
+      ) : null}
 
-        <div>
-          <label htmlFor="resume" className="block text-sm font-medium text-text-secondary mb-2">Resume (optional - PDF only, max 5MB)</label>
-          <input
-            type="file"
-            id="resume"
-            accept=".pdf"
-            {...register('resume')}
-            onChange={handleFileChange}
-            className="w-full text-text-primary file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-white hover:file:bg-orange-700"
-          />
-          {errors.resume && <p className="text-error text-sm mt-1">{errors.resume.message as string}</p>}
-        </div>
-
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? 'Submitting...' : 'Submit Application'}
-        </button>
-      </form>
-
-      <ToastContainer position="bottom-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="dark" />
-    </div>
+      <button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full rounded-lg bg-primary px-6 py-3 font-bold text-white transition-colors hover:bg-orange-700 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {isSubmitting ? 'Submitting...' : 'Submit Application'}
+      </button>
+    </form>
   );
 }

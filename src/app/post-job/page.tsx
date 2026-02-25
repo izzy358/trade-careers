@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { PostJobWizard } from '@/components/PostJobWizard';
+import { PostJobForm } from '@/components/PostJobForm';
 
 export const metadata: Metadata = {
   title: 'Post a Job',
@@ -8,15 +8,15 @@ export const metadata: Metadata = {
 
 export default function PostJobPage() {
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-3">Post a Job</h1>
+    <div className="mx-auto max-w-4xl rounded-2xl bg-[#0d1117] p-4 md:p-6">
+      <div className="mb-6 md:mb-8">
+        <h1 className="mb-2 text-3xl font-bold md:text-4xl">Post a Job</h1>
         <p className="text-text-secondary">
-          Create a listing in three steps: add role details, set contact info, then review and publish.
+          Publish your opening to skilled wrap, tint, PPF, coating, and detailing professionals.
         </p>
       </div>
 
-      <PostJobWizard />
+      <PostJobForm />
     </div>
   );
 }

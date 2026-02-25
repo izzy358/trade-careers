@@ -7,7 +7,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #0F0F1A; /* Primary background color */
+  background-color: #0d1117; /* Primary background color */
   color: #FFFFFF; /* Primary text color */
 }
 
@@ -18,7 +18,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1A1A2E; /* Surface color */
+  background: #1a1f2e; /* Surface color */
   border-radius: 10px;
 }
 

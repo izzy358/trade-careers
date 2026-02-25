@@ -1,4 +1,3 @@
-
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/utils/supabase/server';
 
@@ -7,19 +6,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const { slug } = await params;
   const body = await request.json();
 
-  const {
-    applicant_name,
-    applicant_email,
-    message,
-    resume_url, // URL after upload to Supabase Storage
-  } = body;
+  const { name, email, phone, message, resume_url } = body;
 
-  // Basic validation
-  if (!applicant_name || !applicant_email || !message) {
+  if (!name || !email || !message) {
     return NextResponse.json({ error: 'Missing required fields: name, email, message' }, { status: 400 });
   }
 
-  // First, get the job_id from the slug
   const { data: jobData, error: jobError } = await supabase
     .from('jobs')
     .select('id')
@@ -30,20 +22,20 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (jobError.code === 'PGRST116') {
       return NextResponse.json({ error: 'Job not found' }, { status: 404 });
     }
+
     console.error('Error fetching job for application:', jobError);
     return NextResponse.json({ error: jobError.message }, { status: 500 });
   }
 
-  const job_id = jobData.id;
-
   const { data: applicationData, error: applicationError } = await supabase
     .from('applications')
     .insert({
-      job_id,
-      applicant_name,
-      applicant_email,
+      job_id: jobData.id,
+      name,
+      email,
+      phone: phone || null,
       message,
-      resume_url,
+      resume_url: resume_url || '',
     })
     .select()
     .single();
@@ -52,9 +44,6 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     console.error('Error saving application:', applicationError);
     return NextResponse.json({ error: applicationError.message }, { status: 500 });
   }
-
-  // TODO: Send email to employer (employerEmail) with application details
-  // TODO: Send confirmation email to applicant (applicant_email)
 
   return NextResponse.json({ application: applicationData, message: 'Application submitted successfully' }, { status: 201 });
 }

@@ -11,8 +11,8 @@ const config: Config = {
     extend: {
       colors: {
         primary: '#FF6B2C', // Orange
-        background: '#0F0F1A', // Near-black
-        surface: '#1A1A2E', // Card/panel background
+        background: '#0d1117', // Near-black
+        surface: '#1a1f2e', // Card/panel background
         'surface-hover': '#252540',
         border: '#2A2A45',
         'text-primary': '#FFFFFF',
