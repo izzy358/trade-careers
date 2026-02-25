@@ -6,7 +6,7 @@ import { JOB_TYPES, TRADES } from '@/utils/constants';
 import { buildMetadata } from '@/utils/seo';
 
 export const metadata = buildMetadata({
-  title: 'WrapCareers — Jobs & Installers for Automotive Restyling',
+  title: 'Trade Careers — Jobs & Installers for Automotive Restyling',
   description:
     'Find automotive restyling jobs and installer talent across vinyl wrap, window tint, PPF, ceramic coating, paint correction, and detailing.',
   path: '/',

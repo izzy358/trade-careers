@@ -1,9 +1,9 @@
 import { buildMetadata } from '@/utils/seo';
 
 export const metadata = buildMetadata({
-  title: 'Terms of Service | WrapCareers Automotive Restyling Platform',
+  title: 'Terms of Service | Trade Careers Automotive Restyling Platform',
   description:
-    'Read the WrapCareers Terms of Service covering account use, prohibited conduct, intellectual property, liability limits, and governing law.',
+    'Read the Trade Careers Terms of Service covering account use, prohibited conduct, intellectual property, liability limits, and governing law.',
   path: '/terms',
 });
 
@@ -12,14 +12,14 @@ export default function TermsPage() {
     <div className="mx-auto max-w-4xl rounded-2xl border border-border bg-surface p-8 md:p-10">
       <h1 className="mb-2 text-4xl font-bold">Terms of Service</h1>
       <p className="mb-8 text-text-secondary">
-        Effective date: February 25, 2026. These Terms govern your use of WrapCareers.
+        Effective date: February 25, 2026. These Terms govern your use of Trade Careers.
       </p>
 
       <div className="space-y-6 text-text-secondary">
         <section>
           <h2 className="mb-2 text-2xl font-semibold text-white">1. Acceptance of Terms</h2>
           <p>
-            By accessing or using WrapCareers, you agree to these Terms and our Privacy Policy. If
+            By accessing or using Trade Careers, you agree to these Terms and our Privacy Policy. If
             you do not agree, do not use the platform.
           </p>
         </section>
@@ -44,7 +44,7 @@ export default function TermsPage() {
         <section>
           <h2 className="mb-2 text-2xl font-semibold text-white">4. Intellectual Property</h2>
           <p>
-            WrapCareers and its branding, code, and platform content are owned by WrapCareers or its
+            Trade Careers and its branding, code, and platform content are owned by Trade Careers or its
             licensors. You retain ownership of content you submit, but grant us a license to host,
             display, and process it to operate the service.
           </p>
@@ -53,8 +53,8 @@ export default function TermsPage() {
         <section>
           <h2 className="mb-2 text-2xl font-semibold text-white">5. Limitation of Liability</h2>
           <p>
-            WrapCareers is provided on an &quot;as is&quot; basis. To the fullest extent permitted by
-            law, WrapCareers is not liable for indirect, incidental, special, or consequential
+            Trade Careers is provided on an &quot;as is&quot; basis. To the fullest extent permitted by
+            law, Trade Careers is not liable for indirect, incidental, special, or consequential
             damages, including hiring outcomes or lost profits.
           </p>
         </section>
@@ -88,8 +88,8 @@ export default function TermsPage() {
           <p>
             For questions about these Terms, contact
             {' '}
-            <a className="text-primary hover:underline" href="mailto:support@wrapcareers.com">
-              support@wrapcareers.com
+            <a className="text-primary hover:underline" href="mailto:support@tradecareers.com">
+              support@tradecareers.com
             </a>
             .
           </p>

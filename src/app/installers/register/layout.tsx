@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { buildMetadata } from '@/utils/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Create Installer Profile | Get Discovered by Shops | WrapCareers',
+  title: 'Create Installer Profile | Get Discovered by Shops | Trade Careers',
   description:
     'Build your automotive restyling installer profile to showcase specialties, experience, and contact details for employers.',
   path: '/installers/register',

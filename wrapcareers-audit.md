@@ -1,4 +1,4 @@
-# WrapCareers Project Audit
+# Trade Careers Project Audit
 
 ## Section 1: Previous Issues (What Broke Before)
 
@@ -39,7 +39,7 @@
 
 ## Section 3: Game Plan (How to Fix Everything)
 
-The goal is to get the WrapCareers site to a clean working state, ensuring all previous issues are resolved and new ones are addressed.
+The goal is to get the Trade Careers site to a clean working state, ensuring all previous issues are resolved and new ones are addressed.
 
 1.  **Verify Tailwind CSS / Styling on Live Site (Manual Visual Check):**
     *   **Action:** Manually open `wrap-careers.vercel.app` in a web browser.

@@ -19,7 +19,7 @@ interface JobListingsPageProps {
 }
 
 export const metadata = buildMetadata({
-  title: 'Automotive Restyling Jobs | Vinyl Wrap, Tint, PPF Careers | WrapCareers',
+  title: 'Automotive Restyling Jobs | Vinyl Wrap, Tint, PPF Careers | Trade Careers',
   description:
     'Browse automotive restyling jobs by location, pay, and trade specialty including vinyl wrap, window tint, PPF, and detailing.',
   path: '/jobs',

@@ -23,7 +23,7 @@ export function AppLayout({ children }: AppLayoutProps) {
       <nav className="sticky top-0 z-30 border-b border-border bg-surface/95 backdrop-blur">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4">
           <Link href="/" className="text-2xl font-bold text-primary" onClick={() => setMobileOpen(false)}>
-            WrapCareers
+            Trade Careers
           </Link>
 
           <div className="hidden items-center space-x-5 md:flex">
@@ -70,8 +70,8 @@ export function AppLayout({ children }: AppLayoutProps) {
       <footer className="mt-8 bg-surface p-8 text-sm text-text-secondary">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 md:grid-cols-4">
           <div>
-            <Link href="/" className="mb-2 block text-2xl font-bold text-text-primary">WrapCareers</Link>
-            <p>&copy; 2026 WrapCareers. All rights reserved.</p>
+            <Link href="/" className="mb-2 block text-2xl font-bold text-text-primary">Trade Careers</Link>
+            <p>&copy; 2026 Trade Careers. All rights reserved.</p>
             <div className="mt-4 flex space-x-4">
               <a href="#" className="hover:text-primary">X</a>
               <a href="#" className="hover:text-primary">IG</a>

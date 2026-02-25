@@ -21,13 +21,13 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
 
   if (!job) {
     return buildMetadata({
-      title: 'Job Not Found | WrapCareers',
+      title: 'Job Not Found | Trade Careers',
       description: 'The requested job listing could not be found.',
       path: `/jobs/${encodeURIComponent(slug)}`,
     });
   }
 
-  const title = `${job.title} at ${job.company_name} | ${job.location_city}, ${job.location_state} | WrapCareers`;
+  const title = `${job.title} at ${job.company_name} | ${job.location_city}, ${job.location_state} | Trade Careers`;
   const description = `${job.description.substring(0, 150)}${job.description.length > 150 ? '...' : ''}`;
 
   return buildMetadata({

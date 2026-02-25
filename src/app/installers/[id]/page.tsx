@@ -85,14 +85,14 @@ export async function generateMetadata({ params }: InstallerProfilePageProps): P
 
   if (!installer) {
     return buildMetadata({
-      title: 'Installer Not Found | WrapCareers',
+      title: 'Installer Not Found | Trade Careers',
       description: 'The requested installer profile does not exist.',
       path: `/installers/${encodeURIComponent(id)}`,
     });
   }
 
   return buildMetadata({
-    title: `${installer.name} Installer Profile | ${installer.location} | WrapCareers`,
+    title: `${installer.name} Installer Profile | ${installer.location} | Trade Careers`,
     description: `${installer.name} in ${installer.location}. Specialties: ${(installer.specialties || []).map(tradeLabel).join(', ') || 'General automotive trades'}`,
     path: `/installers/${encodeURIComponent(id)}`,
     type: 'article',

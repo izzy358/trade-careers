@@ -1,9 +1,9 @@
 import { buildMetadata } from '@/utils/seo';
 
 export const metadata = buildMetadata({
-  title: 'Privacy Policy | WrapCareers Automotive Restyling Careers',
+  title: 'Privacy Policy | Trade Careers Automotive Restyling Careers',
   description:
-    'Learn what data WrapCareers collects, how it is used, cookie practices, retention, CCPA rights, and how to contact us.',
+    'Learn what data Trade Careers collects, how it is used, cookie practices, retention, CCPA rights, and how to contact us.',
   path: '/privacy',
 });
 
@@ -12,7 +12,7 @@ export default function PrivacyPage() {
     <div className="mx-auto max-w-4xl rounded-2xl border border-border bg-surface p-8 md:p-10">
       <h1 className="mb-2 text-4xl font-bold">Privacy Policy</h1>
       <p className="mb-8 text-text-secondary">
-        Effective date: February 25, 2026. This policy explains how WrapCareers collects, uses, and
+        Effective date: February 25, 2026. This policy explains how Trade Careers collects, uses, and
         protects your information.
       </p>
 
@@ -72,7 +72,7 @@ export default function PrivacyPage() {
           <p>
             California residents may request disclosure of categories of personal information
             collected, request deletion of eligible data, and request correction of inaccurate
-            personal information. WrapCareers does not sell personal information.
+            personal information. Trade Careers does not sell personal information.
           </p>
         </section>
 
@@ -81,8 +81,8 @@ export default function PrivacyPage() {
           <p>
             For privacy questions or requests, contact
             {' '}
-            <a className="text-primary hover:underline" href="mailto:support@wrapcareers.com">
-              support@wrapcareers.com
+            <a className="text-primary hover:underline" href="mailto:support@tradecareers.com">
+              support@tradecareers.com
             </a>
             .
           </p>

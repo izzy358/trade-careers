@@ -1,9 +1,9 @@
 import { buildMetadata } from '@/utils/seo';
 
 export const metadata = buildMetadata({
-  title: 'About WrapCareers | Automotive Restyling Job Board & Installer Directory',
+  title: 'About Trade Careers | Automotive Restyling Job Board & Installer Directory',
   description:
-    'Learn how WrapCareers connects PPF, vinyl wrap, tint, ceramic coating, paint correction, and detailing professionals with hiring shops.',
+    'Learn how Trade Careers connects PPF, vinyl wrap, tint, ceramic coating, paint correction, and detailing professionals with hiring shops.',
   path: '/about',
 });
 
@@ -14,7 +14,7 @@ export default function AboutPage() {
         <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">About</p>
         <h1 className="mb-4 text-4xl font-bold md:text-5xl">Built for the Automotive Restyling Industry</h1>
         <p className="max-w-3xl text-lg text-text-secondary">
-          WrapCareers is a job board and installer directory built specifically for the automotive
+          Trade Careers is a job board and installer directory built specifically for the automotive
           restyling industry: PPF, vinyl wrap, window tint, ceramic coating, paint correction, and
           detailing.
         </p>
@@ -37,7 +37,7 @@ export default function AboutPage() {
           </div>
           <h2 className="mb-2 text-2xl font-semibold">Founding Story</h2>
           <p className="text-text-secondary">
-            WrapCareers was founded by professionals in the automotive restyling space who saw a
+            Trade Careers was founded by professionals in the automotive restyling space who saw a
             clear gap: there was no dedicated hiring platform built for this industry.
           </p>
         </article>

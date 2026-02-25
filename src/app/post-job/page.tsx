@@ -4,7 +4,7 @@ import { buildMetadata } from '@/utils/seo';
 import { getSessionContext } from '@/utils/auth';
 
 export const metadata = buildMetadata({
-  title: 'Post Automotive Restyling Jobs | Hire Installers Fast | WrapCareers',
+  title: 'Post Automotive Restyling Jobs | Hire Installers Fast | Trade Careers',
   description:
     'Post automotive restyling job openings for vinyl wrap, tint, PPF, ceramic coating, and detailing professionals.',
   path: '/post-job',

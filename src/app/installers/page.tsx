@@ -72,7 +72,7 @@ type InstallersPageProps = {
 };
 
 export const metadata = buildMetadata({
-  title: 'Installer Directory | Automotive Restyling Talent | WrapCareers',
+  title: 'Installer Directory | Automotive Restyling Talent | Trade Careers',
   description:
     'Browse installer profiles for vinyl wrap, window tint, PPF, ceramic coating, detailing, and paint correction.',
   path: '/installers',

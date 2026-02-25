@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
-export const SITE_NAME = 'WrapCareers';
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://wrapcareers.com';
+export const SITE_NAME = 'Trade Careers';
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://tradecareers.com';
 
 export function absoluteUrl(path: string) {
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
