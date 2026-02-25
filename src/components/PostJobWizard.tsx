@@ -15,7 +15,7 @@ type JobFormData = {
   job_type: string;
   pay_min: string;
   pay_max: string;
-  pay_type: 'hourly' | 'salary';
+  pay_type: 'hourly' | 'salary' | 'per-job';
   description: string;
   requirements: string;
   how_to_apply: string;
@@ -270,6 +270,7 @@ export function PostJobWizard() {
               >
                 <option value="hourly">Hourly</option>
                 <option value="salary">Salary</option>
+                <option value="per-job">Per Job</option>
               </select>
             </div>
           </div>
@@ -434,7 +435,11 @@ export function PostJobWizard() {
               </div>
               <div>
                 <dt className="text-text-secondary mb-1">Pay</dt>
-                <dd>${formData.pay_min} - ${formData.pay_max} / {formData.pay_type === 'hourly' ? 'hr' : 'yr'}</dd>
+                <dd>
+                  ${formData.pay_min} - ${formData.pay_max}
+                  {' / '}
+                  {formData.pay_type === 'hourly' ? 'hr' : formData.pay_type === 'salary' ? 'yr' : 'job'}
+                </dd>
               </div>
               <div>
                 <dt className="text-text-secondary mb-1">Trades</dt>

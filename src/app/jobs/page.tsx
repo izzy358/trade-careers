@@ -43,54 +43,58 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
   return (
     <>
       <div className="z-10 mb-6 border-b border-border bg-background py-4 md:sticky md:top-[72px]">
-        <div className="bg-surface p-4 rounded-lg shadow-xl">
+        <form action="/jobs" method="GET" className="bg-surface p-4 rounded-lg shadow-xl">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <input
               type="text"
+              name="q"
               placeholder="Keyword"
               defaultValue={resolvedParams.q || ''}
               className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <input
               type="text"
+              name="location"
               placeholder="Location"
               defaultValue={resolvedParams.location || ''}
               className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
           <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center">
-            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select name="trade" defaultValue={resolvedParams.trade || ''} className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Trade</option>
               {TRADES.map((trade) => (
                 <option key={trade.value} value={trade.value}>{trade.label}</option>
               ))}
             </select>
-            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select name="type" defaultValue={resolvedParams.type || ''} className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Job Type</option>
               {JOB_TYPES.map((type) => (
                 <option key={type.value} value={type.value}>{type.label}</option>
               ))}
             </select>
-            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select name="sort" defaultValue={resolvedParams.sort || 'newest'} className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+              <option value="newest">Sort: Newest</option>
+              <option value="highest-pay">Sort: Highest Pay</option>
+            </select>
+            <select disabled className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-secondary focus:outline-none">
               <option value="">Pay Range</option>
             </select>
-            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select disabled className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-secondary focus:outline-none">
               <option value="">Radius</option>
               <option value="25">25mi</option>
               <option value="50">50mi</option>
               <option value="100">100mi</option>
               <option value="any">Anywhere</option>
             </select>
-            <select className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
-              <option value="">Sort: Newest</option>
-              <option value="closest">Closest</option>
-              <option value="highest-pay">Highest Pay</option>
-            </select>
-            <button className="w-full md:w-auto px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-orange-700 transition-colors">
-              Clear All
+            <button type="submit" className="w-full md:w-auto px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-orange-700 transition-colors">
+              Apply Filters
             </button>
+            <Link href="/jobs" className="w-full md:w-auto px-6 py-3 border border-border rounded-lg text-center hover:border-primary transition-colors">
+              Clear All
+            </Link>
           </div>
-        </div>
+        </form>
       </div>
 
       <h2 className="text-xl font-bold mb-6">{jobs?.length || 0} jobs found</h2>

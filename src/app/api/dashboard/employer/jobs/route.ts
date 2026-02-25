@@ -17,7 +17,7 @@ const postJobSchema = z.object({
   job_type: jobTypeSchema,
   pay_min: z.number().int().min(0).max(1000000).nullable().optional(),
   pay_max: z.number().int().min(0).max(1000000).nullable().optional(),
-  pay_type: z.enum(['hourly', 'salary']).optional(),
+  pay_type: z.enum(['hourly', 'salary', 'per-job']).optional(),
   description: z.string().trim().min(10).max(8000),
   requirements: z.string().trim().max(4000).optional().or(z.literal('')),
   how_to_apply: z.string().trim().max(2000).optional().or(z.literal('')),

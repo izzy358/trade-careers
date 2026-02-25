@@ -22,6 +22,12 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   const supabase = await createClient();
   const { data: authData } = await supabase.auth.getUser();
+  if (!authData.user) {
+    return NextResponse.json(
+      { error: 'You must be logged in to apply for a job.' },
+      { status: 401, headers: rateLimit.headers },
+    );
+  }
   const { slug } = await params;
   const safeSlug = sanitizeSearchTerm(slug.toLowerCase(), 160).replace(/\s+/g, '-');
 
@@ -60,7 +66,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     .from('applications')
     .insert({
       job_id: jobData.id,
-      user_id: authData.user?.id ?? null,
+      user_id: authData.user.id,
       name: sanitizePlainText(parsed.data.name, 120),
       email: sanitizePlainText(parsed.data.email.toLowerCase(), 254),
       phone: parsed.data.phone ? sanitizePlainText(parsed.data.phone, 30) : null,

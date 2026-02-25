@@ -26,7 +26,9 @@ export default async function Home() {
         <p className="text-text-secondary">{job.company_name} · {job.location_city}, {job.location_state}</p>
       </div>
       <div className="text-left sm:text-right">
-        <p className="text-lg font-semibold">${job.pay_min}-{job.pay_max}/{job.pay_type === 'hourly' ? 'hr' : 'yr'}</p>
+        <p className="text-lg font-semibold">
+          ${job.pay_min}-{job.pay_max}/{job.pay_type === 'hourly' ? 'hr' : job.pay_type === 'salary' ? 'yr' : 'job'}
+        </p>
         <p className="text-text-muted text-sm">{new Date(job.created_at).toLocaleDateString()}</p>
       </div>
     </Link>
@@ -40,37 +42,39 @@ export default async function Home() {
         <p className="text-lg md:text-xl text-text-secondary mb-8">
           The job board for wrap, tint, PPF & coating professionals
         </p>
-        <div className="bg-background p-4 rounded-lg shadow-xl max-w-2xl mx-auto">
+        <form action="/jobs" method="GET" className="bg-background p-4 rounded-lg shadow-xl max-w-2xl mx-auto">
           <div className="flex flex-col md:flex-row gap-4 mb-4">
             <input
               type="text"
-              placeholder="🔍 Job title or keyword"
+              name="q"
+              placeholder="Job title or keyword"
               className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
             />
             <input
               type="text"
-              placeholder="📍 City or ZIP"
+              name="location"
+              placeholder="City or state"
               className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
           <div className="flex flex-col md:flex-row gap-4 items-center">
-            <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select name="trade" className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Trade</option>
               {TRADES.map((trade) => (
                 <option key={trade.value} value={trade.value}>{trade.label}</option>
               ))}
             </select>
-            <select className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+            <select name="type" className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
               <option value="">Job Type</option>
               {JOB_TYPES.map((type) => (
                 <option key={type.value} value={type.value}>{type.label}</option>
               ))}
             </select>
-            <button className="w-full md:w-auto px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-orange-700 transition-colors">
+            <button type="submit" className="w-full md:w-auto px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-orange-700 transition-colors">
               Search Jobs
             </button>
           </div>
-        </div>
+        </form>
         <p className="text-text-secondary mt-6">
           Popular: <span className="text-primary">Vinyl Wrap</span> · Window Tint · PPF · Ceramic Coating
         </p>

@@ -63,7 +63,7 @@ type JobForm = {
   job_type: string;
   pay_min: string;
   pay_max: string;
-  pay_type: 'hourly' | 'salary';
+  pay_type: 'hourly' | 'salary' | 'per-job';
   description: string;
   requirements: string;
   how_to_apply: string;
@@ -271,9 +271,10 @@ export function EmployerDashboardClient({ userEmail, initialEmployer, initialJob
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <input value={jobForm.pay_min} onChange={(e) => setJobForm((prev) => ({ ...prev, pay_min: e.target.value }))} type="number" placeholder="Min pay" className="rounded-lg border border-border bg-background p-3" />
             <input value={jobForm.pay_max} onChange={(e) => setJobForm((prev) => ({ ...prev, pay_max: e.target.value }))} type="number" placeholder="Max pay" className="rounded-lg border border-border bg-background p-3" />
-            <select value={jobForm.pay_type} onChange={(e) => setJobForm((prev) => ({ ...prev, pay_type: e.target.value as 'hourly' | 'salary' }))} className="rounded-lg border border-border bg-background p-3">
+            <select value={jobForm.pay_type} onChange={(e) => setJobForm((prev) => ({ ...prev, pay_type: e.target.value as 'hourly' | 'salary' | 'per-job' }))} className="rounded-lg border border-border bg-background p-3">
               <option value="hourly">Hourly</option>
               <option value="salary">Salary</option>
+              <option value="per-job">Per Job</option>
             </select>
           </div>
 

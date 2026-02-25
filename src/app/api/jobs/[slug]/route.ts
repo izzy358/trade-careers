@@ -16,11 +16,11 @@ const updateJobSchema = z
     job_type: z.enum(['full-time', 'part-time', 'contract', 'gig']).optional(),
     pay_min: z.number().int().min(0).max(1000000).optional(),
     pay_max: z.number().int().min(0).max(1000000).optional(),
-    pay_type: z.enum(['hourly', 'salary']).optional(),
+    pay_type: z.enum(['hourly', 'salary', 'per-job']).optional(),
     description: z.string().trim().min(10).max(8000).optional(),
     requirements: z.string().trim().max(4000).optional().or(z.literal('')),
     how_to_apply: z.string().trim().max(2000).optional().or(z.literal('')),
-    status: z.enum(['active', 'inactive', 'closed']).optional(),
+    status: z.enum(['active', 'closed', 'draft']).optional(),
   })
   .strict();
 

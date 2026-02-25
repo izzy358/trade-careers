@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
 }
 
 function payLabel(payType?: string | null) {
-  return payType === 'hourly' ? 'hr' : payType === 'salary' ? 'yr' : '';
+  return payType === 'hourly' ? 'hr' : payType === 'salary' ? 'yr' : payType === 'per-job' ? 'job' : '';
 }
 
 export default async function JobDetailPage({ params }: JobDetailPageProps) {

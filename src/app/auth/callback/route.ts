@@ -4,6 +4,11 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get('code');
+  const nextPath = searchParams.get('next');
+
+  const safeNextPath = nextPath && nextPath.startsWith('/') && !nextPath.startsWith('//')
+    ? nextPath
+    : null;
 
   if (code) {
     const supabase = await createClient();
@@ -18,7 +23,7 @@ export async function GET(request: NextRequest) {
 
       // Redirect to appropriate dashboard
       const dashboardPath = accountType === 'employer' ? '/dashboard/employer' : '/dashboard/installer';
-      return NextResponse.redirect(`${origin}${dashboardPath}`);
+      return NextResponse.redirect(`${origin}${safeNextPath ?? dashboardPath}`);
     }
   }
 
