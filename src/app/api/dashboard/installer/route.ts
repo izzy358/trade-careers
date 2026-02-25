@@ -117,7 +117,8 @@ export async function PUT(request: NextRequest) {
       .single();
 
     if (error) {
-      return NextResponse.json({ error: 'Failed to update installer profile.' }, { status: 500 });
+      console.error('Installer update error:', error);
+      return NextResponse.json({ error: `Failed to update installer profile: ${error.message}` }, { status: 500 });
     }
 
     return NextResponse.json({ installer: data });
@@ -138,7 +139,8 @@ export async function PUT(request: NextRequest) {
     .single();
 
   if (error) {
-    return NextResponse.json({ error: 'Failed to create installer profile.' }, { status: 500 });
+    console.error('Installer insert error:', error);
+    return NextResponse.json({ error: `Failed to create installer profile: ${error.message}` }, { status: 500 });
   }
 
   return NextResponse.json({ installer: data });
