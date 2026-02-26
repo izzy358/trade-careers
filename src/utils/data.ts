@@ -143,3 +143,19 @@ export async function getInstallers({
 
   return { installers: data, error: null };
 }
+
+export async function getStats() {
+  const supabase = await createClient();
+
+  const [jobsResult, installersResult, statesResult] = await Promise.all([
+    supabase.from('jobs').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+    supabase.from('installers').select('id', { count: 'exact', head: true }),
+    supabase.from('jobs').select('location_state').eq('status', 'active'),
+  ]);
+
+  const jobCount = jobsResult.count ?? 0;
+  const installerCount = installersResult.count ?? 0;
+  const uniqueStates = new Set((statesResult.data ?? []).map((j: { location_state: string }) => j.location_state)).size;
+
+  return { jobCount, installerCount, stateCount: uniqueStates, tradeCount: 6 };
+}

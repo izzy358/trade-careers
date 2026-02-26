@@ -1,6 +1,6 @@
 
 import Link from 'next/link';
-import { getJobs } from '@/utils/data';
+import { getJobs, getStats } from '@/utils/data';
 import { JobCard, type JobCardData } from '@/components/JobCard';
 import { JOB_TYPES, TRADES } from '@/utils/constants';
 import { buildMetadata } from '@/utils/seo';
@@ -15,10 +15,11 @@ export const metadata = buildMetadata({
 export default async function Home() {
   const { jobs: featuredJobs } = await getJobs({ limit: 3, sort: 'newest', is_featured: true });
   const { jobs: recentJobs } = await getJobs({ limit: 5, sort: 'newest' });
+  const stats = await getStats();
 
   const RecentJobItem = ({ job }: { job: JobCardData }) => (
     <Link href={`/jobs/${job.slug}`} className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5 transition-colors hover:border-primary sm:flex-row sm:items-center sm:p-6">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gray-700 text-xl font-bold uppercase">
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-surface-hover text-xl font-bold uppercase">
         {job.company_name ? job.company_name[0] : ''}
       </div>
       <div className="flex-grow">
@@ -37,7 +38,7 @@ export default async function Home() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative my-8 rounded-xl bg-gradient-to-r from-gray-900 to-surface p-6 text-center md:p-16">
+      <section className="relative my-8 rounded-xl bg-gradient-to-r from-surface to-background dark:from-gray-900 dark:to-surface p-6 text-center md:p-16">
         <h1 className="mb-4 text-3xl font-bold md:text-5xl">Find Your Next Install Job</h1>
         <p className="text-lg md:text-xl text-text-secondary mb-8">
           The job board for wrap, tint, PPF & coating professionals
@@ -129,19 +130,19 @@ export default async function Home() {
       {/* Stats Bar */}
       <section className="my-12 bg-surface p-8 rounded-xl border border-border flex flex-wrap justify-around items-center text-center">
         <div className="w-1/2 md:w-1/4 p-4">
-          <p className="text-4xl font-bold text-primary">150+</p>
+          <p className="text-4xl font-bold text-primary">{stats.jobCount}</p>
           <p className="text-text-secondary">Jobs</p>
         </div>
         <div className="w-1/2 md:w-1/4 p-4">
-          <p className="text-4xl font-bold text-primary">500+</p>
+          <p className="text-4xl font-bold text-primary">{stats.installerCount}</p>
           <p className="text-text-secondary">Installers</p>
         </div>
         <div className="w-1/2 md:w-1/4 p-4">
-          <p className="text-4xl font-bold text-primary">6</p>
+          <p className="text-4xl font-bold text-primary">{stats.tradeCount}</p>
           <p className="text-text-secondary">Trades</p>
         </div>
         <div className="w-1/2 md:w-1/4 p-4">
-          <p className="text-4xl font-bold text-primary">50</p>
+          <p className="text-4xl font-bold text-primary">{stats.stateCount}</p>
           <p className="text-text-secondary">States</p>
         </div>
       </section>
