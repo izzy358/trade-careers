@@ -24,15 +24,15 @@ export function JobCard({ job }: JobCardProps) {
   const payUnit = job.pay_type === 'hourly' ? 'hr' : job.pay_type === 'salary' ? 'yr' : 'job';
 
   return (
-    <div className="bg-surface p-6 rounded-xl border border-border hover:border-primary transition-colors">
+    <Link href={`/jobs/${job.slug}`} className="block bg-surface p-6 rounded-xl border border-border hover:border-primary transition-colors cursor-pointer">
       <div className="flex items-center mb-4">
         <div className="w-12 h-12 bg-gray-700 rounded-full mr-4 flex items-center justify-center text-xl font-bold uppercase">
           {job.company_name ? job.company_name[0] : ''}
         </div>
         <div>
-          <Link href={`/jobs/${job.slug}`} className="text-xl font-semibold hover:text-primary transition-colors">
+          <span className="text-xl font-semibold hover:text-primary transition-colors">
             {job.title}
-          </Link>
+          </span>
           <p className="text-text-secondary">{job.company_name}</p>
         </div>
       </div>
@@ -46,6 +46,6 @@ export function JobCard({ job }: JobCardProps) {
       </div>
       <p className="text-lg font-semibold mb-1">${job.pay_min}-{job.pay_max}/{payUnit}</p>
       <p className="text-text-muted text-sm">{job.job_type.replace(/\b\w/g, (l: string) => l.toUpperCase())} · {new Date(job.created_at).toLocaleDateString()}</p>
-    </div>
+    </Link>
   );
 }
