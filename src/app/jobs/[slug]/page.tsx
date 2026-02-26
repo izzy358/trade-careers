@@ -82,7 +82,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
         <div className="w-full lg:w-2/3">
           <div className="mb-4 flex flex-wrap gap-2">
             {(job.trades || []).map((trade: string) => (
-              <span key={trade} className={`rounded-full px-3 py-1 text-sm font-medium ${tradeColors[trade] || 'bg-gray-700 text-gray-300'}`}>
+              <span key={trade} className={`rounded-full px-3 py-1 text-sm font-medium ${tradeColors[trade] || 'bg-surface-hover text-text-secondary'}`}>
                 {tradeLabel(trade)}
               </span>
             ))}
@@ -132,7 +132,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
 
         <aside className="w-full space-y-6 lg:w-1/3">
           <div className="rounded-xl border border-border bg-surface p-6 text-center">
-            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-gray-700 text-3xl font-bold uppercase">
+            <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-surface-hover text-3xl font-bold uppercase">
               {job.company_name ? job.company_name[0] : ''}
             </div>
             <h3 className="mb-2 text-xl font-bold">{job.company_name}</h3>

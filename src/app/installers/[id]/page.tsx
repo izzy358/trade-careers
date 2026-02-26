@@ -148,7 +148,7 @@ export default async function InstallerProfilePage({ params }: InstallerProfileP
             {(installer.specialties || []).map((specialty) => (
               <span
                 key={specialty}
-                className={`rounded-full px-3 py-1 text-sm font-medium ${tradeColors[specialty] || 'bg-gray-700 text-gray-300'}`}
+                className={`rounded-full px-3 py-1 text-sm font-medium ${tradeColors[specialty] || 'bg-surface-hover text-text-secondary'}`}
               >
                 {tradeLabel(specialty)}
               </span>

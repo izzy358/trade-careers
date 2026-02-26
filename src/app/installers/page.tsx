@@ -194,7 +194,7 @@ export default async function InstallersPage({ searchParams }: InstallersPagePro
                 {installer.specialties.map((specialtyValue) => (
                   <span
                     key={specialtyValue}
-                    className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${tradeColors[specialtyValue] || 'bg-gray-700 text-gray-300'}`}
+                    className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${tradeColors[specialtyValue] || 'bg-surface-hover text-text-secondary'}`}
                   >
                     {tradeLabel(specialtyValue)}
                   </span>
