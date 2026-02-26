@@ -313,7 +313,7 @@ export function InstallerDashboardClient({ userId, userEmail, initialInstaller, 
           <div className="space-y-3">
             {applications.map((application) => (
               <article key={application.id} className="rounded-lg border border-border bg-background p-4">
-                <p className="font-semibold text-white">{application.jobs?.title || 'Job listing'}</p>
+                <p className="font-semibold text-text-primary">{application.jobs?.title || 'Job listing'}</p>
                 <p className="text-sm text-text-secondary">
                   {application.jobs?.company_name || 'Company'}
                   {application.jobs?.location_city ? ` · ${application.jobs.location_city}, ${application.jobs.location_state}` : ''}

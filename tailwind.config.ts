@@ -1,7 +1,7 @@
-
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
@@ -10,14 +10,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: '#FF6B2C', // Orange
-        background: '#0d1117', // Near-black
-        surface: '#1a1f2e', // Card/panel background
-        'surface-hover': '#252540',
-        border: '#2A2A45',
-        'text-primary': '#FFFFFF',
-        'text-secondary': '#9CA3AF', // gray-400
-        'text-muted': '#6B7280', // gray-500
+        primary: '#FF6B2C',
+        background: 'var(--color-background)',
+        surface: 'var(--color-surface)',
+        'surface-hover': 'var(--color-surface-hover)',
+        border: 'var(--color-border)',
+        'text-primary': 'var(--color-text-primary)',
+        'text-secondary': 'var(--color-text-secondary)',
+        'text-muted': 'var(--color-text-muted)',
         success: '#22C55E',
         error: '#EF4444',
         // Trade colors for badges

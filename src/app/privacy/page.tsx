@@ -18,7 +18,7 @@ export default function PrivacyPage() {
 
       <div className="space-y-6 text-text-secondary">
         <section>
-          <h2 className="mb-2 text-2xl font-semibold text-white">1. Data We Collect</h2>
+          <h2 className="mb-2 text-2xl font-semibold text-text-primary">1. Data We Collect</h2>
           <p>
             We collect personal and profile information you provide, including name, email, phone,
             location, and job or installer profile details (such as specialties, experience, and bio).
@@ -26,7 +26,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-2 text-2xl font-semibold text-white">2. How We Use Data</h2>
+          <h2 className="mb-2 text-2xl font-semibold text-text-primary">2. How We Use Data</h2>
           <p>
             We use your information to operate the platform, display job listings and profiles,
             process applications, improve service quality, communicate with users, and protect against
@@ -35,7 +35,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-2 text-2xl font-semibold text-white">3. Cookies and Similar Technologies</h2>
+          <h2 className="mb-2 text-2xl font-semibold text-text-primary">3. Cookies and Similar Technologies</h2>
           <p>
             We use cookies and similar technologies for session handling, security, analytics, and
             user experience improvements. You can manage cookies in your browser settings.
@@ -43,7 +43,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-2 text-2xl font-semibold text-white">4. Third-Party Services</h2>
+          <h2 className="mb-2 text-2xl font-semibold text-text-primary">4. Third-Party Services</h2>
           <p>
             We use third-party providers to run the platform, including Supabase for database and
             storage services. We may integrate Stripe in the future for paid features.
@@ -51,7 +51,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-2 text-2xl font-semibold text-white">5. Data Retention</h2>
+          <h2 className="mb-2 text-2xl font-semibold text-text-primary">5. Data Retention</h2>
           <p>
             We retain information as long as needed to provide services, comply with legal
             obligations, resolve disputes, and enforce agreements. You may request deletion where
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-2 text-2xl font-semibold text-white">6. Your Rights</h2>
+          <h2 className="mb-2 text-2xl font-semibold text-text-primary">6. Your Rights</h2>
           <p>
             You may request access, correction, or deletion of your data, subject to legal and
             operational limitations. You may also request that we limit certain data uses.
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-2 text-2xl font-semibold text-white">7. California Privacy Rights (CCPA)</h2>
+          <h2 className="mb-2 text-2xl font-semibold text-text-primary">7. California Privacy Rights (CCPA)</h2>
           <p>
             California residents may request disclosure of categories of personal information
             collected, request deletion of eligible data, and request correction of inaccurate
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="mb-2 text-2xl font-semibold text-white">8. Contact</h2>
+          <h2 className="mb-2 text-2xl font-semibold text-text-primary">8. Contact</h2>
           <p>
             For privacy questions or requests, contact
             {' '}

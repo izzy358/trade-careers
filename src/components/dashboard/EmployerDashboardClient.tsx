@@ -300,7 +300,7 @@ export function EmployerDashboardClient({ userEmail, initialEmployer, initialJob
               <article key={job.id} className="rounded-lg border border-border bg-background p-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <p className="font-semibold text-white">{job.title}</p>
+                    <p className="font-semibold text-text-primary">{job.title}</p>
                     <p className="text-sm text-text-secondary">{job.location_city}, {job.location_state} · {new Date(job.created_at).toLocaleDateString()}</p>
                   </div>
                   <div className="flex items-center gap-2">
@@ -325,7 +325,7 @@ export function EmployerDashboardClient({ userEmail, initialEmployer, initialJob
           <div className="space-y-3">
             {applications.map((application) => (
               <article key={application.id} className="rounded-lg border border-border bg-background p-4">
-                <p className="font-semibold text-white">{application.name} applied to {application.jobs?.title || 'a job'}</p>
+                <p className="font-semibold text-text-primary">{application.name} applied to {application.jobs?.title || 'a job'}</p>
                 <p className="text-sm text-text-secondary">{application.email}{application.phone ? ` · ${application.phone}` : ''}</p>
                 {application.message ? <p className="mt-2 whitespace-pre-wrap text-sm text-text-secondary">{application.message}</p> : null}
                 <p className="mt-2 text-xs text-text-secondary">{new Date(application.created_at).toLocaleString()}</p>

@@ -1,34 +1,63 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Light mode (default) */
+:root {
+  --color-background: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f3f5;
+  --color-border: #dee2e6;
+  --color-text-primary: #1a1a2e;
+  --color-text-secondary: #495057;
+  --color-text-muted: #868e96;
+}
+
+/* Dark mode */
+.dark {
+  --color-background: #0d1117;
+  --color-surface: #1a1f2e;
+  --color-surface-hover: #252540;
+  --color-border: #2A2A45;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #9CA3AF;
+  --color-text-muted: #6B7280;
+}
 
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #0d1117; /* Primary background color */
-  color: #FFFFFF; /* Primary text color */
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* Custom scrollbar for dark theme (optional, but good for UX) */
-::-webkit-scrollbar {
+/* Smooth transitions for themed elements */
+.bg-background,
+.bg-surface,
+nav,
+footer,
+main {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* Custom scrollbar for dark theme */
+.dark ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
-::-webkit-scrollbar-track {
-  background: #1a1f2e; /* Surface color */
+.dark ::-webkit-scrollbar-track {
+  background: #1a1f2e;
   border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #2A2A45; /* Border color */
+.dark ::-webkit-scrollbar-thumb {
+  background: #2A2A45;
   border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #FF6B2C; /* Orange primary on hover */
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #FF6B2C;
 }
-
-/* Redeploy trigger Mon Feb 23 20:59:37 PST 2026 */

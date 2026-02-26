@@ -22,7 +22,7 @@ export default async function PostJobPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl rounded-2xl bg-[#0d1117] p-4 md:p-6">
+    <div className="mx-auto max-w-4xl rounded-2xl bg-background p-4 md:p-6">
       <div className="mb-6 md:mb-8">
         <h1 className="mb-2 text-3xl font-bold md:text-4xl">Post a Job</h1>
         <p className="text-text-secondary">

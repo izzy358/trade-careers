@@ -26,7 +26,7 @@ export function JobCard({ job }: JobCardProps) {
   return (
     <Link href={`/jobs/${job.slug}`} className="block bg-surface p-6 rounded-xl border border-border hover:border-primary transition-colors cursor-pointer">
       <div className="flex items-center mb-4">
-        <div className="w-12 h-12 bg-gray-700 rounded-full mr-4 flex items-center justify-center text-xl font-bold uppercase">
+        <div className="w-12 h-12 bg-surface-hover rounded-full mr-4 flex items-center justify-center text-xl font-bold uppercase">
           {job.company_name ? job.company_name[0] : ''}
         </div>
         <div>
@@ -39,7 +39,7 @@ export function JobCard({ job }: JobCardProps) {
       <p className="text-text-secondary mb-2">{job.location_city}, {job.location_state}</p>
       <div className="flex flex-wrap gap-2 mb-4">
         {job.trades.map((trade: string) => (
-          <span key={trade} className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${tradeColors[trade] || 'bg-gray-700 text-gray-300'}`}>
+          <span key={trade} className={`text-xs font-medium px-2.5 py-0.5 rounded-full ${tradeColors[trade] || 'bg-surface-hover text-text-secondary'}`}>
             {trade.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase())}
           </span>
         ))}

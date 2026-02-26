@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { AuthNav } from '@/components/AuthNav';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -33,6 +34,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               </Link>
             ))}
             <AuthNav />
+            <ThemeToggle />
           </div>
 
           <button
@@ -60,6 +62,10 @@ export function AppLayout({ children }: AppLayoutProps) {
                 </Link>
               ))}
               <AuthNav mobile onNavigate={() => setMobileOpen(false)} />
+              <div className="flex items-center gap-2 pt-2">
+                <span className="text-text-secondary text-sm">Theme</span>
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         ) : null}

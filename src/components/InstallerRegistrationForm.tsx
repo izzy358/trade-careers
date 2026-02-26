@@ -168,7 +168,7 @@ export function InstallerRegistrationForm() {
         </div>
 
         <div className="rounded-xl border border-border bg-background/60 p-4">
-          <h2 className="mb-3 text-lg font-semibold text-white">Socials (Optional)</h2>
+          <h2 className="mb-3 text-lg font-semibold text-text-primary">Socials (Optional)</h2>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label className="mb-2 block text-sm text-text-secondary">Instagram</label>
