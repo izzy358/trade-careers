@@ -71,6 +71,13 @@ export default async function Home() {
                 <option key={type.value} value={type.value}>{type.label}</option>
               ))}
             </select>
+            <select name="radius" className="flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary">
+              <option value="">Radius</option>
+              <option value="25">25mi</option>
+              <option value="50">50mi</option>
+              <option value="100">100mi</option>
+              <option value="200">200mi</option>
+            </select>
             <button type="submit" className="w-full md:w-auto px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-orange-700 transition-colors">
               Search Jobs
             </button>
