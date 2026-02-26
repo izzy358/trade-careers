@@ -8,6 +8,7 @@ interface JobListingsPageProps {
   searchParams: Promise<{
     q?: string;
     location?: string;
+    radius?: string;
     trade?: string;
     type?: string;
     payMin?: string;
@@ -31,6 +32,7 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
   const { jobs, error } = await getJobs({
     q: resolvedParams.q,
     location: resolvedParams.location,
+    radius: resolvedParams.radius,
     trade: resolvedParams.trade,
     jobType: resolvedParams.type,
     payMin: resolvedParams.payMin,
@@ -80,12 +82,16 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
             <select disabled className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-secondary focus:outline-none">
               <option value="">Pay Range</option>
             </select>
-            <select disabled className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-secondary focus:outline-none">
+            <select
+              name="radius"
+              defaultValue={resolvedParams.radius || ''}
+              className="w-full flex-grow p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            >
               <option value="">Radius</option>
               <option value="25">25mi</option>
               <option value="50">50mi</option>
               <option value="100">100mi</option>
-              <option value="any">Anywhere</option>
+              <option value="200">200mi</option>
             </select>
             <button type="submit" className="w-full md:w-auto px-6 py-3 bg-primary text-white font-bold rounded-lg hover:bg-orange-700 transition-colors">
               Apply Filters

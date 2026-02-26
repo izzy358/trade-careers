@@ -1,9 +1,99 @@
 import { createClient } from './supabase/server';
 import { sanitizeSearchTerm } from './api';
+import cityCoordinates from '@/data/us-city-coordinates.json';
+
+type CityCoordinate = {
+  city: string;
+  state: string;
+  lat: number;
+  lng: number;
+};
+
+type Coordinates = {
+  lat: number;
+  lng: number;
+};
+
+const EARTH_RADIUS_MILES = 3958.8;
+const US_CITY_COORDINATES = cityCoordinates as CityCoordinate[];
+
+function normalizeCityStatePart(value: string) {
+  return value.trim().toLowerCase().replace(/\./g, '').replace(/\s+/g, ' ');
+}
+
+function toCityStateKey(city: string, state: string) {
+  return `${normalizeCityStatePart(city)}|${state.trim().toUpperCase()}`;
+}
+
+const cityStateCoordinates = new Map<string, Coordinates>();
+const cityCoordinatesByName = new Map<string, Coordinates>();
+
+for (const entry of US_CITY_COORDINATES) {
+  const point = { lat: entry.lat, lng: entry.lng };
+  cityStateCoordinates.set(toCityStateKey(entry.city, entry.state), point);
+
+  const cityKey = normalizeCityStatePart(entry.city);
+  if (!cityCoordinatesByName.has(cityKey)) {
+    cityCoordinatesByName.set(cityKey, point);
+  }
+}
+
+function toRadians(degrees: number) {
+  return (degrees * Math.PI) / 180;
+}
+
+function haversineMiles(a: Coordinates, b: Coordinates) {
+  const dLat = toRadians(b.lat - a.lat);
+  const dLng = toRadians(b.lng - a.lng);
+  const lat1 = toRadians(a.lat);
+  const lat2 = toRadians(b.lat);
+
+  const sinHalfDLat = Math.sin(dLat / 2);
+  const sinHalfDLng = Math.sin(dLng / 2);
+  const aa =
+    sinHalfDLat * sinHalfDLat +
+    Math.cos(lat1) * Math.cos(lat2) * sinHalfDLng * sinHalfDLng;
+
+  return 2 * EARTH_RADIUS_MILES * Math.atan2(Math.sqrt(aa), Math.sqrt(1 - aa));
+}
+
+function getCoordinatesFromSearchLocation(location: string): Coordinates | null {
+  const trimmed = location.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const commaSplit = trimmed.split(',');
+  if (commaSplit.length >= 2) {
+    const cityPart = commaSplit[0].trim();
+    const statePart = commaSplit[1].trim().slice(0, 2).toUpperCase();
+    const exact = cityStateCoordinates.get(toCityStateKey(cityPart, statePart));
+    if (exact) {
+      return exact;
+    }
+  }
+
+  const trailingStateMatch = trimmed.match(/^(.*?)[\s,]+([A-Za-z]{2})$/);
+  if (trailingStateMatch) {
+    const cityPart = trailingStateMatch[1].trim();
+    const statePart = trailingStateMatch[2].toUpperCase();
+    const exact = cityStateCoordinates.get(toCityStateKey(cityPart, statePart));
+    if (exact) {
+      return exact;
+    }
+  }
+
+  return cityCoordinatesByName.get(normalizeCityStatePart(trimmed)) ?? null;
+}
+
+function getCoordinatesFromJobLocation(city: string, state: string): Coordinates | null {
+  return cityStateCoordinates.get(toCityStateKey(city, state)) ?? null;
+}
 
 export async function getJobs({
   q,
   location,
+  radius,
   trade,
   jobType,
   payMin,
@@ -15,6 +105,7 @@ export async function getJobs({
 }: {
   q?: string;
   location?: string;
+  radius?: string;
   trade?: string;
   jobType?: string;
   payMin?: string;
@@ -25,6 +116,11 @@ export async function getJobs({
   is_featured?: boolean;
 } = {}) {
   const supabase = await createClient();
+  const parsedRadius = radius ? parseInt(radius, 10) : NaN;
+  const shouldUseRadius =
+    Boolean(location && location.trim().length > 0) &&
+    Number.isFinite(parsedRadius) &&
+    parsedRadius > 0;
 
   let query = supabase
     .from('jobs')
@@ -37,7 +133,7 @@ export async function getJobs({
       query = query.or(`title.ilike.%${safeQ}%,description.ilike.%${safeQ}%,company_name.ilike.%${safeQ}%`);
     }
   }
-  if (location) {
+  if (location && !shouldUseRadius) {
     const safeLocation = sanitizeSearchTerm(location);
     if (safeLocation) {
       query = query.or(`location_city.ilike.%${safeLocation}%,location_state.ilike.%${safeLocation}%`);
@@ -69,6 +165,32 @@ export async function getJobs({
   const currentPage = page || 1;
   const itemsPerPage = limit || 20;
   const offset = (currentPage - 1) * itemsPerPage;
+
+  if (shouldUseRadius) {
+    const center = getCoordinatesFromSearchLocation(location!);
+    if (!center) {
+      return { jobs: [], error: null };
+    }
+
+    const { data, error } = await query;
+    if (error) {
+      console.error('Error fetching jobs:', error);
+      return { jobs: [], error: error.message };
+    }
+
+    const filteredJobs = (data ?? []).filter((job: { location_city: string; location_state: string }) => {
+      const jobCoordinates = getCoordinatesFromJobLocation(job.location_city, job.location_state);
+      if (!jobCoordinates) {
+        return false;
+      }
+      return haversineMiles(center, jobCoordinates) <= parsedRadius;
+    });
+
+    return {
+      jobs: filteredJobs.slice(offset, offset + itemsPerPage),
+      error: null,
+    };
+  }
 
   const { data, error } = await query.range(offset, offset + itemsPerPage - 1);
 
