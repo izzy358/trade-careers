@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { AppLayout } from '@/components/AppLayout';
+import { BetaBanner } from '@/components/BetaBanner';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { SITE_NAME, buildMetadata } from '@/utils/seo';
 
@@ -32,6 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body>
+        <BetaBanner />
         <ThemeProvider>
           <AppLayout>{children}</AppLayout>
         </ThemeProvider>
