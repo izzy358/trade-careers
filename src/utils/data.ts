@@ -127,6 +127,8 @@ export async function getJobs({
     .select('*')
     .eq('status', 'active');
 
+  query = query.or('expires_at.is.null,expires_at.gt.now()');
+
   if (q) {
     const safeQ = sanitizeSearchTerm(q);
     if (safeQ) {

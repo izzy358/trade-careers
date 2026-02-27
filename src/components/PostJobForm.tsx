@@ -128,6 +128,7 @@ export function PostJobForm() {
 
   return (
     <form onSubmit={onSubmit} className="rounded-2xl border border-border bg-surface p-5 md:p-8">
+      <p className="mb-5 text-sm text-text-secondary">Jobs are listed for 30 days.</p>
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <div className="md:col-span-2">
           <label className="mb-2 block text-sm text-text-secondary">Job Title *</label>

@@ -181,6 +181,7 @@ export function PostJobWizard() {
 
   return (
     <div className="bg-surface border border-border rounded-2xl p-6 md:p-8">
+      <p className="mb-5 text-sm text-text-secondary">Jobs are listed for 30 days.</p>
       <ol className="grid grid-cols-3 gap-3 mb-8">
         {stepLabels.map((label, index) => {
           const isActive = index === currentStep;

@@ -21,6 +21,7 @@ type Job = {
   location_city: string;
   location_state: string;
   created_at: string;
+  expires_at: string | null;
 };
 
 type Application = {
@@ -85,6 +86,18 @@ const emptyJob: JobForm = {
   requirements: '',
   how_to_apply: '',
 };
+
+function isExpiringSoon(job: Job) {
+  if (job.status !== 'active' || !job.expires_at) {
+    return false;
+  }
+
+  const now = Date.now();
+  const expiresAt = new Date(job.expires_at).getTime();
+  const sevenDaysMs = 7 * 24 * 60 * 60 * 1000;
+
+  return expiresAt > now && expiresAt - now < sevenDaysMs;
+}
 
 export function EmployerDashboardClient({ userEmail, initialEmployer, initialJobs, applications }: Props) {
   const [employer, setEmployer] = useState<Employer | null>(initialEmployer);
@@ -245,6 +258,7 @@ export function EmployerDashboardClient({ userEmail, initialEmployer, initialJob
 
       <section className="rounded-xl border border-border bg-surface p-6">
         <h2 className="mb-4 text-2xl font-semibold">Post a New Job</h2>
+        <p className="mb-4 text-sm text-text-secondary">Jobs are listed for 30 days.</p>
         <form onSubmit={postJob} className="space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <input value={jobForm.title} onChange={(e) => setJobForm((prev) => ({ ...prev, title: e.target.value }))} placeholder="Job title" className="rounded-lg border border-border bg-background p-3" required />
@@ -305,6 +319,9 @@ export function EmployerDashboardClient({ userEmail, initialEmployer, initialJob
                   </div>
                   <div className="flex items-center gap-2">
                     <span className={`rounded-full px-2 py-1 text-xs ${job.status === 'active' ? 'bg-success/20 text-success' : 'bg-border text-text-secondary'}`}>{job.status}</span>
+                    {isExpiringSoon(job) ? (
+                      <span className="rounded-full bg-yellow-400/20 px-2 py-1 text-xs text-yellow-600">Expiring soon</span>
+                    ) : null}
                     <button type="button" onClick={() => toggleJobStatus(job.id, job.status)} className="rounded-lg border border-border px-3 py-1 text-sm hover:border-primary">
                       {job.status === 'active' ? 'Close' : 'Reopen'}
                     </button>
