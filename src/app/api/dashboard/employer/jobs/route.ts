@@ -72,7 +72,7 @@ export async function GET() {
 
   const { data, error } = await auth.supabase
     .from('jobs')
-    .select('id, title, slug, status, location_city, location_state, created_at, expires_at')
+    .select('id, title, slug, status, location_city, location_state, created_at')
     .eq('employer_id', auth.employerId)
     .order('created_at', { ascending: false });
 
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
       manage_token: manageToken,
       employer_id: auth.employerId,
     })
-    .select('id, title, slug, status, location_city, location_state, created_at, expires_at')
+    .select('id, title, slug, status, location_city, location_state, created_at')
     .single();
 
   if (error) {
