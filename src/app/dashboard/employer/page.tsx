@@ -60,7 +60,7 @@ export default async function EmployerDashboardPage() {
     const [{ data: jobsData }, { data: appData }] = await Promise.all([
       supabase
         .from('jobs')
-        .select('id, title, slug, status, location_city, location_state, created_at')
+        .select('id, title, slug, status, location_city, location_state, created_at, expires_at')
         .eq('employer_id', employer.id)
         .order('created_at', { ascending: false }),
       supabase

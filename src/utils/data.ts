@@ -127,8 +127,7 @@ export async function getJobs({
     .select('*')
     .eq('status', 'active');
 
-  // NOTE: expires_at filter disabled until migration 010 runs on Supabase
-  // query = query.or('expires_at.is.null,expires_at.gt.now()');
+  query = query.or('expires_at.is.null,expires_at.gt.now()');
 
   if (q) {
     const safeQ = sanitizeSearchTerm(q);
