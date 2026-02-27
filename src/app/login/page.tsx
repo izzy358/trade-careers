@@ -95,6 +95,11 @@ export default function LoginPage() {
             required
             className="w-full rounded-lg border border-border bg-background p-3"
           />
+          <div className="mt-2 text-right text-sm">
+            <Link href="/forgot-password" className="text-primary hover:underline">
+              Forgot password?
+            </Link>
+          </div>
         </div>
 
         {error ? <div className="rounded-lg border border-error bg-error/10 p-3 text-sm text-error">{error}</div> : null}
