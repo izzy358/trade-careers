@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server';
 import { tradeColors, tradeLabel } from '@/utils/constants';
 import { JobApplicationSection } from '@/components/JobApplicationSection';
 import { buildMetadata } from '@/utils/seo';
+import { formatPay } from '@/utils/format';
 
 interface JobDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -36,10 +37,6 @@ export async function generateMetadata({ params }: JobDetailPageProps): Promise<
     path: `/jobs/${encodeURIComponent(slug)}`,
     type: 'article',
   });
-}
-
-function payLabel(payType?: string | null) {
-  return payType === 'hourly' ? 'hr' : payType === 'salary' ? 'yr' : payType === 'per-job' ? 'job' : '';
 }
 
 export default async function JobDetailPage({ params }: JobDetailPageProps) {
@@ -98,7 +95,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
             <div>
               <p className="text-text-secondary">Pay Range</p>
               <p className="text-lg font-semibold">
-                {hasComp ? `$${job.pay_min}-${job.pay_max}${payLabel(job.pay_type) ? `/${payLabel(job.pay_type)}` : ''}` : 'Compensation not listed'}
+                {hasComp ? formatPay(job.pay_min, job.pay_max, job.pay_type) : 'Compensation not listed'}
               </p>
             </div>
             <div>

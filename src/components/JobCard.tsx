@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { tradeColors } from '@/utils/constants';
+import { formatPay } from '@/utils/format';
 
 export type JobCardData = {
   id: string;
@@ -21,8 +22,6 @@ interface JobCardProps {
 }
 
 export function JobCard({ job }: JobCardProps) {
-  const payUnit = job.pay_type === 'hourly' ? 'hr' : job.pay_type === 'salary' ? 'yr' : 'job';
-
   return (
     <Link href={`/jobs/${job.slug}`} className="block bg-surface p-6 rounded-xl border border-border hover:border-primary transition-colors cursor-pointer">
       <div className="flex items-center mb-4">
@@ -44,7 +43,7 @@ export function JobCard({ job }: JobCardProps) {
           </span>
         ))}
       </div>
-      <p className="text-lg font-semibold mb-1">${job.pay_min}-{job.pay_max}/{payUnit}</p>
+      <p className="text-lg font-semibold mb-1">{formatPay(job.pay_min, job.pay_max, job.pay_type)}</p>
       <p className="text-text-muted text-sm">{job.job_type.replace(/\b\w/g, (l: string) => l.toUpperCase())} · {new Date(job.created_at).toLocaleDateString()}</p>
     </Link>
   );

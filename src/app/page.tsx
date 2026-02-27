@@ -4,6 +4,7 @@ import { getJobs, getStats } from '@/utils/data';
 import { JobCard, type JobCardData } from '@/components/JobCard';
 import { JOB_TYPES, TRADES } from '@/utils/constants';
 import { buildMetadata } from '@/utils/seo';
+import { formatPay } from '@/utils/format';
 
 export const metadata = buildMetadata({
   title: 'Trade Careers — Jobs & Installers for Automotive Restyling',
@@ -28,7 +29,7 @@ export default async function Home() {
       </div>
       <div className="text-left sm:text-right">
         <p className="text-lg font-semibold">
-          ${job.pay_min}-{job.pay_max}/{job.pay_type === 'hourly' ? 'hr' : job.pay_type === 'salary' ? 'yr' : 'job'}
+          {formatPay(job.pay_min, job.pay_max, job.pay_type)}
         </p>
         <p className="text-text-muted text-sm">{new Date(job.created_at).toLocaleDateString()}</p>
       </div>
@@ -84,7 +85,14 @@ export default async function Home() {
           </div>
         </form>
         <p className="text-text-secondary mt-6">
-          Popular: <span className="text-primary">Vinyl Wrap</span> · Window Tint · PPF · Ceramic Coating
+          Popular:{' '}
+          <Link href="/jobs?trade=vinyl-wrap" className="text-primary hover:underline">Vinyl Wrap</Link>
+          {' · '}
+          <Link href="/jobs?trade=window-tint" className="text-primary hover:underline">Window Tint</Link>
+          {' · '}
+          <Link href="/jobs?trade=ppf" className="text-primary hover:underline">PPF</Link>
+          {' · '}
+          <Link href="/jobs?trade=ceramic-coating" className="text-primary hover:underline">Ceramic Coating</Link>
         </p>
       </section>
 

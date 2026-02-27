@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useLayoutEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -15,34 +15,51 @@ export function useTheme() {
   return useContext(ThemeContext);
 }
 
+function getInitialTheme(): Theme {
+  if (typeof window === 'undefined') {
+    return 'dark';
+  }
+
+  const stored = window.localStorage.getItem('theme');
+  if (stored === 'light' || stored === 'dark') {
+    return stored;
+  }
+
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
-  const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = useState<Theme>(() => getInitialTheme());
 
   useEffect(() => {
-    const stored = localStorage.getItem('theme') as Theme | null;
-    if (stored) {
-      setTheme(stored);
-    } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-      setTheme('light');
-    }
-    setMounted(true);
+    if (typeof window === 'undefined') return;
+
+    const stored = window.localStorage.getItem('theme');
+    if (stored === 'light' || stored === 'dark') return;
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+    const handleChange = (event: MediaQueryListEvent) => {
+      setTheme(event.matches ? 'light' : 'dark');
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
+  useLayoutEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const root = document.documentElement;
     if (theme === 'dark') {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('theme', theme);
-  }, [theme, mounted]);
+    window.localStorage.setItem('theme', theme);
+  }, [theme]);
 
   const toggleTheme = () => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
 
-  // Prevent flash: default to dark class on SSR
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
