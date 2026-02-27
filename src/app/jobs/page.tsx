@@ -114,8 +114,9 @@ export default async function JobListingsPage({ searchParams }: JobListingsPageP
           jobs.map((job: JobCardData) => <JobCard key={job.id} job={job} />)
         ) : (
           <div className="md:col-span-3 text-center text-text-secondary p-8 rounded-xl bg-surface border border-border">
-            <h3 className="text-2xl font-semibold mb-2">No jobs found matching your search.</h3>
-            <p className="mb-2">Try expanding your radius, removing some filters, or browsing all jobs.</p>
+            <p className="mb-2 text-4xl" aria-hidden="true">🔎</p>
+            <h3 className="text-2xl font-semibold mb-2">No jobs found matching your criteria.</h3>
+            <p className="mb-2">Try adjusting your filters.</p>
             <Link href="/jobs" className="text-primary hover:underline">Browse all jobs</Link>
           </div>
         )}

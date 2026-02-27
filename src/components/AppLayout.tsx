@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React, { useState } from 'react';
 import { AuthNav } from '@/components/AuthNav';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -18,6 +19,9 @@ const navLinks = [
 
 export function AppLayout({ children }: AppLayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
+
+  const isActiveRoute = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <div className="min-h-screen bg-background text-text-primary">
@@ -29,7 +33,15 @@ export function AppLayout({ children }: AppLayoutProps) {
 
           <div className="hidden items-center space-x-5 md:flex">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="hover:text-primary">
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`border-b-2 pb-1 transition-colors ${
+                  isActiveRoute(link.href)
+                    ? 'border-primary text-primary'
+                    : 'border-transparent hover:border-primary/40 hover:text-primary'
+                }`}
+              >
                 {link.label}
               </Link>
             ))}
@@ -55,7 +67,11 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="rounded-lg border border-border px-3 py-2 hover:border-primary"
+                  className={`rounded-lg border px-3 py-2 ${
+                    isActiveRoute(link.href)
+                      ? 'border-primary text-primary'
+                      : 'border-border hover:border-primary'
+                  }`}
                   onClick={() => setMobileOpen(false)}
                 >
                   {link.label}

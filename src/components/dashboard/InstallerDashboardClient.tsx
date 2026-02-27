@@ -308,7 +308,7 @@ export function InstallerDashboardClient({ userId, userEmail, initialInstaller, 
       <section className="rounded-xl border border-border bg-surface p-6">
         <h2 className="mb-3 text-2xl font-semibold">Jobs You Applied To</h2>
         {applications.length === 0 ? (
-          <p className="text-text-secondary">No tracked applications yet.</p>
+          <p className="text-text-secondary">You haven&apos;t applied to any jobs yet.</p>
         ) : (
           <div className="space-y-3">
             {applications.map((application) => (

@@ -1,20 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useSyncExternalStore } from 'react';
 
 const BETA_BANNER_DISMISSED_KEY = 'beta-banner-dismissed';
 
 export function BetaBanner() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const dismissed = window.localStorage.getItem(BETA_BANNER_DISMISSED_KEY) === '1';
-    setIsVisible(!dismissed);
-  }, []);
+  const [dismissedInSession, setDismissedInSession] = useState(false);
+  const isDismissedPersisted = useSyncExternalStore(
+    () => () => {},
+    () => window.localStorage.getItem(BETA_BANNER_DISMISSED_KEY) === '1',
+    () => false,
+  );
+  const isVisible = !dismissedInSession && !isDismissedPersisted;
 
   const dismissBanner = () => {
     window.localStorage.setItem(BETA_BANNER_DISMISSED_KEY, '1');
-    setIsVisible(false);
+    setDismissedInSession(true);
   };
 
   if (!isVisible) return null;
@@ -24,7 +25,7 @@ export function BetaBanner() {
       <div className="mx-auto flex max-w-7xl items-start gap-3 px-4 py-3 sm:items-center sm:gap-4 sm:px-6">
         <p className="flex-1 text-sm leading-relaxed sm:text-base">
           🚧 Beta Preview — This site is under active development. Some features may not work as expected.
-          {' '}Found an issue? Let us know!
+          {' '}Found an issue? <a href="mailto:feedback@tradecareers.com" className="underline underline-offset-2 hover:no-underline">Let us know!</a>
         </p>
         <button
           type="button"

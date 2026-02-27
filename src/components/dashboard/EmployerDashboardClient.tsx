@@ -307,7 +307,7 @@ export function EmployerDashboardClient({ userEmail, initialEmployer, initialJob
       <section className="rounded-xl border border-border bg-surface p-6">
         <h2 className="mb-4 text-2xl font-semibold">Your Job Postings</h2>
         {jobs.length === 0 ? (
-          <p className="text-text-secondary">No job postings yet.</p>
+          <p className="text-text-secondary">You haven&apos;t posted any jobs yet. Post your first job above!</p>
         ) : (
           <div className="space-y-3">
             {jobs.map((job) => (
@@ -337,7 +337,7 @@ export function EmployerDashboardClient({ userEmail, initialEmployer, initialJob
       <section className="rounded-xl border border-border bg-surface p-6">
         <h2 className="mb-4 text-2xl font-semibold">Applications Received</h2>
         {applications.length === 0 ? (
-          <p className="text-text-secondary">No applications received yet.</p>
+          <p className="text-text-secondary">No applications yet</p>
         ) : (
           <div className="space-y-3">
             {applications.map((application) => (

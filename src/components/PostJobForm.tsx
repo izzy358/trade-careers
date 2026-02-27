@@ -34,6 +34,7 @@ export function PostJobForm() {
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [postedJob, setPostedJob] = useState<{ slug: string; title: string } | null>(null);
+  const descriptionLength = formData.description.length;
 
   const updateField = <K extends keyof FormData>(field: K, value: FormData[K]) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -52,7 +53,11 @@ export function PostJobForm() {
     const nextErrors: FormErrors = {};
 
     if (!formData.title.trim()) nextErrors.title = 'Job title is required.';
-    if (!formData.description.trim()) nextErrors.description = 'Description is required.';
+    if (!formData.description.trim()) {
+      nextErrors.description = 'Description is required.';
+    } else if (formData.description.trim().length < 50) {
+      nextErrors.description = 'Description must be at least 50 characters.';
+    }
     if (!formData.company_name.trim()) nextErrors.company_name = 'Company name is required.';
 
     if (!formData.company_email.trim()) {
@@ -137,6 +142,7 @@ export function PostJobForm() {
             onChange={(event) => updateField('title', event.target.value)}
             className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Lead PPF Installer"
+            required
           />
           {errors.title ? <p className="mt-1 text-sm text-red-400">{errors.title}</p> : null}
         </div>
@@ -147,6 +153,7 @@ export function PostJobForm() {
             value={formData.company_name}
             onChange={(event) => updateField('company_name', event.target.value)}
             className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            required
           />
           {errors.company_name ? <p className="mt-1 text-sm text-red-400">{errors.company_name}</p> : null}
         </div>
@@ -158,6 +165,7 @@ export function PostJobForm() {
             value={formData.company_email}
             onChange={(event) => updateField('company_email', event.target.value)}
             className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            required
           />
           {errors.company_email ? <p className="mt-1 text-sm text-red-400">{errors.company_email}</p> : null}
         </div>
@@ -168,6 +176,7 @@ export function PostJobForm() {
             value={formData.location_city}
             onChange={(event) => updateField('location_city', event.target.value)}
             className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            required
           />
           {errors.location_city ? <p className="mt-1 text-sm text-red-400">{errors.location_city}</p> : null}
         </div>
@@ -180,6 +189,7 @@ export function PostJobForm() {
             maxLength={2}
             className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="TX"
+            required
           />
           {errors.location_state ? <p className="mt-1 text-sm text-red-400">{errors.location_state}</p> : null}
         </div>
@@ -190,6 +200,7 @@ export function PostJobForm() {
             value={formData.job_type}
             onChange={(event) => updateField('job_type', event.target.value)}
             className="w-full rounded-lg border border-border bg-background p-3 text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            required
           >
             <option value="">Select job type</option>
             {JOB_TYPES.filter((type) => ['full-time', 'part-time', 'contract'].includes(type.value)).map((type) => (
@@ -231,7 +242,12 @@ export function PostJobForm() {
             onChange={(event) => updateField('description', event.target.value)}
             className="w-full rounded-lg border border-border bg-background p-3 text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
             placeholder="Describe responsibilities, shift expectations, and experience needed."
+            minLength={50}
+            required
           />
+          <p className={`mt-1 text-xs ${descriptionLength < 50 ? 'text-red-400' : 'text-text-secondary'}`}>
+            {descriptionLength}/50 characters minimum
+          </p>
           {errors.description ? <p className="mt-1 text-sm text-red-400">{errors.description}</p> : null}
         </div>
       </div>

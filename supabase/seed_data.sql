@@ -38,7 +38,7 @@ VALUES
     true,
     'active',
     'hiring@apexfilmstudio.com',
-    'https://images.example.com/apex-film-studio-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/apex-film-studio-logo.png',
     'Email your portfolio and resume with subject line "Lead PPF Installer".'
   ),
   (
@@ -59,7 +59,7 @@ VALUES
     false,
     'active',
     'careers@metrowraplab.com',
-    'https://images.example.com/metro-wrap-lab-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/metro-wrap-lab-logo.png',
     'Apply through careers@metrowraplab.com with recent install photos.'
   ),
   (
@@ -80,7 +80,7 @@ VALUES
     false,
     'active',
     'jobs@solarshadecustoms.com',
-    'https://images.example.com/solar-shade-customs-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/solar-shade-customs-logo.png',
     'Submit your application and availability by email.'
   ),
   (
@@ -101,7 +101,7 @@ VALUES
     false,
     'active',
     'team@glossdistrict.com',
-    'https://images.example.com/gloss-district-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/gloss-district-logo.png',
     'Send resume plus 3 before/after photos.'
   ),
   (
@@ -122,7 +122,7 @@ VALUES
     false,
     'active',
     'dispatch@primemobiletint.com',
-    'https://images.example.com/prime-mobile-tint-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/prime-mobile-tint-logo.png',
     'Include service area and references in your application email.'
   ),
   (
@@ -143,7 +143,7 @@ VALUES
     true,
     'active',
     'production@northlinegraphics.com',
-    'https://images.example.com/northline-graphics-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/northline-graphics-logo.png',
     'Apply via email with "Fleet Wrap Installer" in subject.'
   ),
   (
@@ -164,7 +164,7 @@ VALUES
     false,
     'active',
     'hiring@velocitydetail.co',
-    'https://images.example.com/velocity-detail-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/velocity-detail-logo.png',
     'Email a short intro and your weekly availability.'
   ),
   (
@@ -185,7 +185,7 @@ VALUES
     false,
     'active',
     'careers@refineautolab.com',
-    'https://images.example.com/refine-auto-lab-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/refine-auto-lab-logo.png',
     'Send portfolio and machine setup experience.'
   ),
   (
@@ -206,7 +206,7 @@ VALUES
     true,
     'active',
     'ops@torquecustoms.com',
-    'https://images.example.com/torque-customs-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/torque-customs-logo.png',
     'Apply with resume and references.'
   ),
   (
@@ -227,7 +227,7 @@ VALUES
     false,
     'active',
     'jobs@shieldhouse.com',
-    'https://images.example.com/shield-house-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/shield-house-logo.png',
     'Email current availability and recent work samples.'
   ),
   (
@@ -248,7 +248,7 @@ VALUES
     false,
     'draft',
     'recruiting@summitvisual.com',
-    'https://images.example.com/summit-visual-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/summit-visual-logo.png',
     'Send resume and a short installation summary.'
   ),
   (
@@ -269,30 +269,30 @@ VALUES
     true,
     'closed',
     'hiring@blacklineautofilms.com',
-    'https://images.example.com/blackline-auto-films-logo.png',
+    'https://cdn.tradecareers.com/demo/logos/blackline-auto-films-logo.png',
     'This role is currently closed; keep your resume on file by email.'
   )
 ON CONFLICT (slug) DO NOTHING;
 
 INSERT INTO public.installers (name, email, location, specialties, bio, portfolio_urls, years_experience, is_available, slug, manage_token)
 VALUES
-  ('Marcus Hill', 'marcus.hill@example.com', 'Dallas, TX', ARRAY['vinyl-wrap','ppf'], 'Lead wrap installer specializing in matte color-change wraps and full-front PPF packages.', ARRAY['https://instagram.com/marcuswraps','https://drive.google.com/marcusportfolio'], 8, true, 'marcus-hill-dallas-tx', 'seedtoken-marcus-hill'),
-  ('Elena Ortiz', 'elena.ortiz@example.com', 'Austin, TX', ARRAY['window-tint','ceramic-coating'], 'Mobile tint and coating specialist focused on premium heat-rejection films.', ARRAY['https://instagram.com/ortiztintlab'], 6, true, 'elena-ortiz-austin-tx', 'seedtoken-elena-ortiz'),
-  ('Darnell Brooks', 'darnell.brooks@example.com', 'Phoenix, AZ', ARRAY['ppf','paint-correction'], 'PPF edge-wrap technician with paint correction background on high-end vehicles.', ARRAY['https://www.youtube.com/@brooksppf'], 9, false, 'darnell-brooks-phoenix-az', 'seedtoken-darnell-brooks'),
-  ('Kayla Nguyen', 'kayla.nguyen@example.com', 'San Diego, CA', ARRAY['vinyl-wrap','auto-detailing'], 'Fleet wrap installer and detailer experienced with rapid turnaround commercial jobs.', ARRAY['https://instagram.com/kaylawrapworks'], 5, true, 'kayla-nguyen-san-diego-ca', 'seedtoken-kayla-nguyen'),
-  ('Jordan Bell', 'jordan.bell@example.com', 'Miami, FL', ARRAY['window-tint'], 'Tint specialist focused on clean shrink patterns and compliance with state film laws.', ARRAY['https://jordanbelltint.example.com'], 4, true, 'jordan-bell-miami-fl', 'seedtoken-jordan-bell'),
-  ('Isaac Romero', 'isaac.romero@example.com', 'Las Vegas, NV', ARRAY['ceramic-coating','paint-correction'], 'Correction and coating technician delivering multi-stage polishing and long-term protection.', ARRAY['https://instagram.com/romerocoatings'], 7, true, 'isaac-romero-las-vegas-nv', 'seedtoken-isaac-romero'),
-  ('Nia Patel', 'nia.patel@example.com', 'Seattle, WA', ARRAY['ppf','window-tint'], 'Certified PPF installer with luxury dealership experience and in-house tint support.', ARRAY['https://instagram.com/niaprotectivefilms'], 10, false, 'nia-patel-seattle-wa', 'seedtoken-nia-patel'),
-  ('Cody Ramirez', 'cody.ramirez@example.com', 'Denver, CO', ARRAY['auto-detailing','ceramic-coating'], 'Detail bay lead handling prep, decontamination, and ceramic installs.', ARRAY['https://tiktok.com/@detailcody'], 3, true, 'cody-ramirez-denver-co', 'seedtoken-cody-ramirez'),
-  ('Sofia Bennett', 'sofia.bennett@example.com', 'Nashville, TN', ARRAY['vinyl-wrap','window-tint','ppf'], 'Versatile installer across wraps, tint, and PPF with strong customer handoff process.', ARRAY['https://instagram.com/sofiabuilds'], 11, true, 'sofia-bennett-nashville-tn', 'seedtoken-sofia-bennett'),
-  ('Trevor King', 'trevor.king@example.com', 'Charlotte, NC', ARRAY['vinyl-wrap','paint-correction'], 'Color-change wrap specialist known for complex curves and post-wrap refinishing.', ARRAY['https://www.trevorwraps.example.com'], 12, true, 'trevor-king-charlotte-nc', 'seedtoken-trevor-king')
+  ('Marcus Hill', 'marcus.hill@wrapworkspro.com', 'Dallas, TX', ARRAY['vinyl-wrap','ppf'], 'Lead wrap installer specializing in matte color-change wraps and full-front PPF packages.', ARRAY['https://instagram.com/marcuswraps','https://drive.google.com/marcusportfolio'], 8, true, 'marcus-hill-dallas-tx', 'seedtoken-marcus-hill'),
+  ('Elena Ortiz', 'elena.ortiz@ortiztintlab.com', 'Austin, TX', ARRAY['window-tint','ceramic-coating'], 'Mobile tint and coating specialist focused on premium heat-rejection films.', ARRAY['https://instagram.com/ortiztintlab'], 6, true, 'elena-ortiz-austin-tx', 'seedtoken-elena-ortiz'),
+  ('Darnell Brooks', 'darnell.brooks@brooksprotectivefilms.com', 'Phoenix, AZ', ARRAY['ppf','paint-correction'], 'PPF edge-wrap technician with paint correction background on high-end vehicles.', ARRAY['https://www.youtube.com/@brooksppf'], 9, false, 'darnell-brooks-phoenix-az', 'seedtoken-darnell-brooks'),
+  ('Kayla Nguyen', 'kayla.nguyen@kaylawrapworks.com', 'San Diego, CA', ARRAY['vinyl-wrap','auto-detailing'], 'Fleet wrap installer and detailer experienced with rapid turnaround commercial jobs.', ARRAY['https://instagram.com/kaylawrapworks'], 5, true, 'kayla-nguyen-san-diego-ca', 'seedtoken-kayla-nguyen'),
+  ('Jordan Bell', 'jordan.bell@belltintlabs.com', 'Miami, FL', ARRAY['window-tint'], 'Tint specialist focused on clean shrink patterns and compliance with state film laws.', ARRAY['https://jordanbelltint.com'], 4, true, 'jordan-bell-miami-fl', 'seedtoken-jordan-bell'),
+  ('Isaac Romero', 'isaac.romero@romerocoatings.com', 'Las Vegas, NV', ARRAY['ceramic-coating','paint-correction'], 'Correction and coating technician delivering multi-stage polishing and long-term protection.', ARRAY['https://instagram.com/romerocoatings'], 7, true, 'isaac-romero-las-vegas-nv', 'seedtoken-isaac-romero'),
+  ('Nia Patel', 'nia.patel@niaprotectivefilms.com', 'Seattle, WA', ARRAY['ppf','window-tint'], 'Certified PPF installer with luxury dealership experience and in-house tint support.', ARRAY['https://instagram.com/niaprotectivefilms'], 10, false, 'nia-patel-seattle-wa', 'seedtoken-nia-patel'),
+  ('Cody Ramirez', 'cody.ramirez@milehighdetailco.com', 'Denver, CO', ARRAY['auto-detailing','ceramic-coating'], 'Detail bay lead handling prep, decontamination, and ceramic installs.', ARRAY['https://tiktok.com/@detailcody'], 3, true, 'cody-ramirez-denver-co', 'seedtoken-cody-ramirez'),
+  ('Sofia Bennett', 'sofia.bennett@sofiabuilds.com', 'Nashville, TN', ARRAY['vinyl-wrap','window-tint','ppf'], 'Versatile installer across wraps, tint, and PPF with strong customer handoff process.', ARRAY['https://instagram.com/sofiabuilds'], 11, true, 'sofia-bennett-nashville-tn', 'seedtoken-sofia-bennett'),
+  ('Trevor King', 'trevor.king@trevorwrapworks.com', 'Charlotte, NC', ARRAY['vinyl-wrap','paint-correction'], 'Color-change wrap specialist known for complex curves and post-wrap refinishing.', ARRAY['https://www.trevorwrapworks.com'], 12, true, 'trevor-king-charlotte-nc', 'seedtoken-trevor-king')
 ON CONFLICT (slug) DO NOTHING;
 
 UPDATE public.installers
 SET
   instagram = '@marcuswraps',
   tiktok = '@marcuswraps',
-  website = 'https://marcuswrapgarage.example.com',
+  website = 'https://marcuswrapgarage.com',
   youtube = 'https://youtube.com/@marcuswraps',
   phone = '(214) 555-0142'
 WHERE slug = 'marcus-hill-dallas-tx';
@@ -300,13 +300,13 @@ WHERE slug = 'marcus-hill-dallas-tx';
 UPDATE public.installers
 SET
   instagram = '@ortiztintlab',
-  website = 'https://ortiztintlab.example.com',
+  website = 'https://ortiztintlab.com',
   phone = '(512) 555-0178'
 WHERE slug = 'elena-ortiz-austin-tx';
 
 UPDATE public.installers
 SET
   tiktok = '@detailcody',
-  website = 'https://detailcody.example.com',
+  website = 'https://detailcody.com',
   youtube = 'https://youtube.com/@detailcody'
 WHERE slug = 'cody-ramirez-denver-co';

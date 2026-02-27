@@ -53,6 +53,7 @@ export function PostJobWizard() {
   const [submitError, setSubmitError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [postedJob, setPostedJob] = useState<{ slug: string; title: string } | null>(null);
+  const descriptionLength = formData.description.length;
 
   const selectedJobTypeLabel = useMemo(() => {
     return JOB_TYPES.find((type) => type.value === formData.job_type)?.label ?? formData.job_type;
@@ -80,7 +81,11 @@ export function PostJobWizard() {
       if (!formData.location_state.trim()) nextErrors.location_state = 'State is required.';
       if (!formData.job_type) nextErrors.job_type = 'Job type is required.';
       if (formData.trades.length === 0) nextErrors.trades = 'Select at least one trade.';
-      if (!formData.description.trim()) nextErrors.description = 'Description is required.';
+      if (!formData.description.trim()) {
+        nextErrors.description = 'Description is required.';
+      } else if (formData.description.trim().length < 50) {
+        nextErrors.description = 'Description must be at least 50 characters.';
+      }
 
       const payMin = Number(formData.pay_min);
       const payMax = Number(formData.pay_max);
@@ -216,6 +221,7 @@ export function PostJobWizard() {
               onChange={(event) => updateField('title', event.target.value)}
               placeholder="e.g. Lead PPF Installer"
               className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+              required
             />
             {errors.title && <p className="text-error text-sm mt-1">{errors.title}</p>}
           </div>
@@ -252,6 +258,7 @@ export function PostJobWizard() {
                 value={formData.job_type}
                 onChange={(event) => updateField('job_type', event.target.value)}
                 className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                required
               >
                 <option value="">Select job type</option>
                 {JOB_TYPES.map((type) => (
@@ -285,6 +292,7 @@ export function PostJobWizard() {
                 value={formData.location_city}
                 onChange={(event) => updateField('location_city', event.target.value)}
                 className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                required
               />
               {errors.location_city && <p className="text-error text-sm mt-1">{errors.location_city}</p>}
             </div>
@@ -299,6 +307,7 @@ export function PostJobWizard() {
                 onChange={(event) => updateField('location_state', event.target.value.toUpperCase())}
                 placeholder="e.g. TX"
                 className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                required
               />
               {errors.location_state && <p className="text-error text-sm mt-1">{errors.location_state}</p>}
             </div>
@@ -314,6 +323,7 @@ export function PostJobWizard() {
                 value={formData.pay_min}
                 onChange={(event) => updateField('pay_min', event.target.value)}
                 className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                required
               />
               {errors.pay_min && <p className="text-error text-sm mt-1">{errors.pay_min}</p>}
             </div>
@@ -327,6 +337,7 @@ export function PostJobWizard() {
                 value={formData.pay_max}
                 onChange={(event) => updateField('pay_max', event.target.value)}
                 className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+                required
               />
               {errors.pay_max && <p className="text-error text-sm mt-1">{errors.pay_max}</p>}
             </div>
@@ -341,7 +352,12 @@ export function PostJobWizard() {
               onChange={(event) => updateField('description', event.target.value)}
               placeholder="Describe responsibilities, schedule, and role expectations."
               className="w-full p-3 rounded-lg bg-border border border-border text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-primary"
+              minLength={50}
+              required
             />
+            <p className={`text-xs mt-1 ${descriptionLength < 50 ? 'text-error' : 'text-text-secondary'}`}>
+              {descriptionLength}/50 characters minimum
+            </p>
             {errors.description && <p className="text-error text-sm mt-1">{errors.description}</p>}
           </div>
 
@@ -369,6 +385,7 @@ export function PostJobWizard() {
               value={formData.company_name}
               onChange={(event) => updateField('company_name', event.target.value)}
               className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+              required
             />
             {errors.company_name && <p className="text-error text-sm mt-1">{errors.company_name}</p>}
           </div>
@@ -381,6 +398,7 @@ export function PostJobWizard() {
               value={formData.company_email}
               onChange={(event) => updateField('company_email', event.target.value)}
               className="w-full p-3 rounded-lg bg-border border border-border text-text-primary focus:outline-none focus:ring-2 focus:ring-primary"
+              required
             />
             {errors.company_email && <p className="text-error text-sm mt-1">{errors.company_email}</p>}
           </div>
